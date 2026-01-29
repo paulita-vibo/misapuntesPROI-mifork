@@ -199,8 +199,8 @@ Existe en muchos lenguajes (con otros nombres)
         double y;
     } Punto;
 
-double distanciaAOrigen(Punto *p) {
-    return sqrt(p->x * p->x + p->y * p->y);
-}
+    double distanciaAOrigen(Punto *p) {
+        return sqrt(p->x * p->x + p->y * p->y);
+    }
  ¿Qué pasó con this?
 Se convierte en un parámetro explícito (Punto *p).
