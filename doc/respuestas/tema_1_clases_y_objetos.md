@@ -86,26 +86,26 @@ Sobrecarga de métodos: consiste en definir varios métodos con el mismo nombre,
 
 
 ## 8. Ejemplo mínimo de clase en Java, que se llame Punto, con dos atributos, x e y, con un método que se llame `calculaDistanciaAOrigen`, que calcule la distancia a la posición 0,0. Por sencillez, los atributos deben tener visibilidad por defecto. Crea además un ejemplo de uso con una instancia y uso del método
-
-class Punto {
-    double x;
-    double y;
-
-    double calculaDistanciaAOrigen() {
-        return Math.sqrt(x * x + y * y);
+    
+    class Punto {
+        double x;
+        double y;
+    
+        double calculaDistanciaAOrigen() {
+            return Math.sqrt(x * x + y * y);
+        }
     }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        Punto p = new Punto();
-        p.x = 3;
-        p.y = 4;
-
-        double d = p.calculaDistanciaAOrigen();
-        System.out.println(d); // 5.0
+    
+    public class Main {
+        public static void main(String[] args) {
+            Punto p = new Punto();
+            p.x = 3;
+            p.y = 4;
+    
+            double d = p.calculaDistanciaAOrigen();
+            System.out.println(d); // 5.0
+        }
     }
-}
 
 
 ## 9. ¿Cuál es el punto de entrada en un programa en Java? ¿Qué es `static` y para qué vale? ¿Sólo se emplea para ese método `main`? ¿Para qué se combina con `final`?
@@ -138,17 +138,17 @@ Permite que Java sea multiplataforma
 
 ## 11. En el código anterior de la clase `Punto` ¿Qué es `new`? ¿Qué es un **constructor**? Pon un ejemplo de constructor en una clase `Empleado` que tenga DNI, nombre y apellidos
 
-class Empleado {
-    String dni;
-    String nombre;
-    String apellidos;
-
-    Empleado(String dni, String nombre, String apellidos) {
-        this.dni = dni;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
+    class Empleado {
+        String dni;
+        String nombre;
+        String apellidos;
+    
+        Empleado(String dni, String nombre, String apellidos) {
+            this.dni = dni;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+        }
     }
-}
 
 ## 12. ¿Qué es la referencia `this`? ¿Se llama igual en todos los lenguajes? Pon un ejemplo del uso de `this` en la clase `Punto`
 
@@ -164,13 +164,13 @@ Python → self
 
 ## 14. El paso del `Punto` como parámetro a un método, es **por copia** o **por referencia**, es decir, si se cambia el valor de algún atributo del punto pasado como parámetro, dichos cambios afectan al objeto fuera del método? ¿Qué ocurre si en vez de un `Punto`, se recibiese un entero (`int`) y dicho entero se modificase dentro de la función? 
 
-double distanciaA(Punto p) {
-    return Math.sqrt(
-        (this.x - p.x) * (this.x - p.x) +
-        (this.y - p.y) * (this.y - p.y)
-    );
-}
-
+    double distanciaA(Punto p) {
+        return Math.sqrt(
+            (this.x - p.x) * (this.x - p.x) +
+            (this.y - p.y) * (this.y - p.y)
+        );
+    }
+    
 
 ## 15. ¿Qué es el método `toString()` en Java? ¿Existe en otros lenguajes? Pon un ejemplo de `toString()` en la clase `Punto` en Java
 
@@ -191,13 +191,13 @@ Existe en muchos lenguajes (con otros nombres)
 
 
 ## 17. Quitemos un poco de magia a todo esto: ¿Como se podría “emular”, con `struct` en C, la clase `Punto`, con su función para calcular la distancia al origen? ¿Qué ha pasado con `this`?
-#include <stdio.h>
-#include <math.h>
-
-typedef struct {
-    double x;
-    double y;
-} Punto;
+    #include <stdio.h>
+    #include <math.h>
+    
+    typedef struct {
+        double x;
+        double y;
+    } Punto;
 
 double distanciaAOrigen(Punto *p) {
     return sqrt(p->x * p->x + p->y * p->y);
