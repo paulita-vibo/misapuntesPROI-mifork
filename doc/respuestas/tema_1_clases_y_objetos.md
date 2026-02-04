@@ -16,20 +16,19 @@ Por favor, escribe en impersonal las respuestas.
 # TEMA 1. Clases y objetos
 
 ## 1. ¿Cuáles son las cuatro características básicas de la programación orientada a objetos? Describe brevemente cada una
-
 Las cuatro características básicas de la Programación Orientada a Objetos (POO) son:
 
 Encapsulamiento
 Consiste en ocultar los detalles internos de un objeto y exponer solo lo necesario mediante métodos. Así se protege la información y se evita que otros objetos modifiquen directamente los datos.
+Ademas de unir estado y comportamiento en la misma unidad 
 -Ejemplo: atributos privados y métodos públicos.
 
 Abstracción
-Permite representar solo las características esenciales de un objeto, ignorando los detalles innecesarios. Ayuda a simplificar problemas complejos.
--Ejemplo: una clase Vehículo con métodos como arrancar() sin importar cómo lo hace internamente.
+Permite representar solo las características esenciales de un objeto, ignorando los detalles innecesarios. Ayuda a simplificar problemas complejos y facilitar el cambio 
 
 Herencia
-Es la capacidad de una clase de heredar atributos y métodos de otra clase, promoviendo la reutilización de código.
--Ejemplo: Auto y Moto heredan de la clase Vehículo.
+Es la capacidad de una clase de heredar atributos y métodos de otra clase, estableciendo jerarquias.
+-Ejemplo: Perro y Gato heredan de la clase Animal.
 
 Polimorfismo
 Permite que un mismo método tenga diferentes comportamientos según el objeto que lo implemente.
@@ -42,6 +41,8 @@ Cuatro lenguajes populares que permiten la programación orientada a objetos son
 
 Java, Python, C++ ,C# 
 
+Python y Java Script son lenguajes dinámicos; Mientras que Java, c# (con GC) o C++ y Rust (sin GC),son lenguajes compilados 
+
 ## 3. Los paradigmas anteriores a la POO, ¿Qué es la **programación estructurada**? y, todavía mejor, ¿Qué es la **programación modular**?
 
 La programación estructurada es un paradigma que organiza los programas usando estructuras de control claras y bien definidas, evitando el uso de saltos incontrolados como goto.Se basa principalmente en tres estructuras:
@@ -49,21 +50,32 @@ Secuencia: instrucciones que se ejecutan una tras otra.
 Selección: decisiones (if, else, switch).
 Iteración: bucles (for, while, do-while).
 
+La programación modular,agrupa código para facilitar su uso por otros programas o otros modulos , es un paradigma de diseño de software que consiste en dividir un programa en partes más pequeñas, independientes y manejables llamadas módulos.
+
+Cada módulo es una unidad autónoma que se encarga de realizar una función específica del sistema. Estos módulos se diseñan para que puedan interactuar entre sí, pero sin que el funcionamiento interno de uno dependa directamente de los detalles internos del otro.
+
+Las librerías (o bibliotecas) y los paquetes son las herramientas físicas que usamos para implementar la programación modular en el mundo real.
+
 
 ## 4. ¿Qué tres elementos definen a un objeto en programación orientada a objetos?
 En programación orientada a objetos, un objeto se define por tres elementos fundamentales:
+
 Atributos
 Son las propiedades o datos que describen al objeto. Representan su estado.
+Lo que en los strucks eran ????????
 
-Métodos
+Métodos/Comportamiento 
 Son las acciones o comportamientos que el objeto puede realizar.
 
 Identidad
 Es lo que distingue a un objeto de otro, incluso si tienen los mismos atributos y métodos. Cada objeto es una instancia única.
+Direccion de memoria -> Cada objeto es único en si mismo 
+
+Estados 
 
 ## 5. ¿Qué es una clase? ¿Es lo mismo que un objeto? ¿Qué es una instancia? ¿Todos los lenguajes orientados a objetos manejan el concepto de clase?
-Clase: es un molde o plantilla que define cómo serán los objetos: sus atributos y métodos.
-Objeto: es un elemento concreto creado a partir de una clase.
+Clase: es un molde o plantilla, para crear instancias durante la ejecución, que define cómo serán los objetos: sus atributos y métodos.
+Objeto: es un elemento concreto creado a partir de una clase con un estado concreto de sus atributos .
 Instancia: es el proceso y el resultado de crear un objeto a partir de una clase.
 
 No son lo mismo:Clase → definición, Objeto → elemento real en memoria
@@ -83,10 +95,11 @@ Recolección de basura es un mecanismo automático que detecta objetos que ya no
 
 Método: es una función asociada a una clase u objeto, que define su comportamiento.
 Sobrecarga de métodos: consiste en definir varios métodos con el mismo nombre, pero con distintos parámetros.
+                        Mismo nombre con distinto numero y/o tipo de parámetros 
 
 
 ## 8. Ejemplo mínimo de clase en Java, que se llame Punto, con dos atributos, x e y, con un método que se llame `calculaDistanciaAOrigen`, que calcule la distancia a la posición 0,0. Por sencillez, los atributos deben tener visibilidad por defecto. Crea además un ejemplo de uso con una instancia y uso del método
-    
+```java    
     class Punto {
         double x;
         double y;
@@ -106,7 +119,7 @@ Sobrecarga de métodos: consiste en definir varios métodos con el mismo nombre,
             System.out.println(d); // 5.0
         }
     }
-
+```
 
 ## 9. ¿Cuál es el punto de entrada en un programa en Java? ¿Qué es `static` y para qué vale? ¿Sólo se emplea para ese método `main`? ¿Para qué se combina con `final`?
 
