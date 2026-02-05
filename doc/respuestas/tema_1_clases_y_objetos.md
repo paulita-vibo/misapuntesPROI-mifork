@@ -62,10 +62,12 @@ En programación orientada a objetos, un objeto se define por tres elementos fun
 
 Atributos
 Son las propiedades o datos que describen al objeto. Representan su estado.
-Lo que en los strucks eran ????????
+Lo que en los strucks eran campos, miembros o variables miembro
 
 Métodos/Comportamiento 
 Son las acciones o comportamientos que el objeto puede realizar.
+Aquí es donde la POO da el gran salto respecto a los struts tradicionales ya que el struct no hace nada si no que necesitas funciones externas que reciban el struct como argumento para modificalo, sin embargo en el POO las funciones vienen dentro del objeto (sabe cómo operarse a sí mismo).
+
 
 Identidad
 Es lo que distingue a un objeto de otro, incluso si tienen los mismos atributos y métodos. Cada objeto es una instancia única.
@@ -75,11 +77,17 @@ Estados
 
 ## 5. ¿Qué es una clase? ¿Es lo mismo que un objeto? ¿Qué es una instancia? ¿Todos los lenguajes orientados a objetos manejan el concepto de clase?
 Clase: es un molde o plantilla, para crear instancias durante la ejecución, que define cómo serán los objetos: sus atributos y métodos.
+Pero no es "algo" en si mismo.No ocupa espacio en la memoria real del programa para guardar datos, solo describe cómo se estructuran 
 Objeto: es un elemento concreto creado a partir de una clase con un estado concreto de sus atributos .
-Instancia: es el proceso y el resultado de crear un objeto a partir de una clase.
 
-No son lo mismo:Clase → definición, Objeto → elemento real en memoria
-Algunos lenguajes usan prototipos en lugar de clases (por ejemplo, JavaScript).
+Instancia: es el proceso y el resultado de crear un objeto a partir de una clase.
+-Si la clase es la idea y el objeto es la cosa real, la instancia es el nombre que le damos al proceso de "hacer que esa idea exista". Es la relacion entre la clase y el objeto 
+
+No son lo mismo:
+Clase → Molde/Plantilla 
+Objeto → elemento real en memoria
+
+Aunque la mayoría de los lenguajes populares (como Java, C++, Python o C#) se basan en clases, existe una rama entera de la Programación Orientada a Objetos (POO) que no las utiliza.
 
 ## 6. ¿Dónde se almacenan en memoria los objetos? ¿Es igual en todos los lenguajes? ¿Qué es la **recolección de basura**? 
 
