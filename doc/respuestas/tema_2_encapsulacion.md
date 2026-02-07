@@ -54,17 +54,29 @@ La ocultación de información es clave porque impide modificaciones directas de
 
 ## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
 
-### Respuesta
+
 
 
 ## 6. En Java, ¿A quiénes se pueden aplicar los modificadores `public` o `private`?
 
-### Respuesta
+El uso de modificadores de acceso public y private depende del nivel de estructura. 
+public: La clase es accesible desde cualquier otra clase en cualquier paquete 
+private: No se puede aplicar a clases de nivel superior 
 
 
 ## 7. En POO, la visibilidad puede ser pública o privada, pero ¿existen más tipos de visibilidad? ¿Qué ocurre en Java? ¿Y en otros lenguajes?
 
-### Respuesta
+Java es muy específico y ofrece cuatro niveles de visibilidad: 
+-public
+-protected
+-default
+-private
+ Aunque solo usas tres palabras clave, el cuarto nivel es el que queda cuando no escribes nada 
+
+Cada lenguaje tiene su propia "personalidad" para manejar la privacidad: 
+-C# añade niveles mas granulares como internal, protected internal o private protected 
+-Python no tiene restricciones reales. Todo es público técnicamente, pero se usan convenciones de nombres (_variable, _ _ variable) 
+-JavaScript usa el símbolo # antes del nombre de la variable para marcarla como privada de forma nativa 
 
 
 ## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
