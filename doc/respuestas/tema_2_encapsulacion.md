@@ -16,22 +16,40 @@ Por favor, escribe en impersonal las respuestas.
 
 ## 1. En Programación Orientada a Objetos (POO), ¿Qué buscan la **encapsulación** y **la ocultación** de información? Enumera brevemente algunas ventajas de la ocultación de información.
 
-### Respuesta
+En Programación Orientada a Objetos tanto la encapsulación como la ocultación de información buscan proteger y organizar mejor los datos y el comportamiento de los objetos, pero cada concepto pone el foco en algo distinto: 
+La encapsulacion consiste en agrupar los datos (atributos) y los métodos que operan sobre ellos dentro de una clase, y controlar el acesso a esos datos mediante modificadores (como privare, protectec o public)
+La ocultación de información busca esconder los detalles internos de implementación de un objeto, mostrando solo lo necesario a través de una interfaz pública. 
+Alguna de sus ventajas son: 
+-Reduce el acoplamiento
+-Mejora la mantenibilidad 
+-Aumenta la seguridad 
+-Facilita la reutilización 
+-Mejora la comprensión del código 
+
 
 
 ## 2. ¿Qué se entiende por la **interfaz pública** de un objeto o clase en POO? Describe brevemente cómo se relaciona con la ocultación de información.
 
-### Respuesta
+La interfaz pública de un objeto o clase es el conjunto de métodos accesibles desde fuera de la clase, es decir, aquello que otros objetos pueden usar para interactuar con ella 
+
+La ocultación de información se apoya directamente en la interfaz pública: 
+-La interfaz pública expone solo lo necesario (public)
+-Los detalles internos de implementación (atributos y métodos private) quedan ocultos 
+-El usuario de la clase no puede acceder ni depender del estado interno, solo usar la interfaz 
 
 
 ## 3. Brevemente: ¿Por qué hay que ser conscientes y diseñar con cuidado la **interfaz pública** de una clase? ¿Es fácil cambiarla?
 
-### Respuesta
+Porque es la parte visible y estable del contrato con el resto del sistema. Todo el código que use esa clase dependerá directamente de ella 
 
+No es facil cambiar la interfaz pública ya que rompe dependencias, propaga cambios, afecta a la reutilización y compatibilidad y puede producir errores sutiles 
 
 ## 4. ¿Qué son las **invariantes de clase** y por qué la ocultación de información nos ayuda?
 
-### Respuesta
+Las invariantes de clases son condiciones que deben cumplirse siempre para que un  objeto esté en un estado válido, antes y despues de ejecutar cualquier método público de la clase. Describen las reglas internas que definen la coherencia del objeto 
+
+La ocultación de información es clave porque impide modificaciones directas del estado interno, centraliza el control del estado, facilita la vadilación y reduce errores y estados inconscientes
+
 
 
 ## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
