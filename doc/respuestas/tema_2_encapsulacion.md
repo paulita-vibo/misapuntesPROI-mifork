@@ -209,7 +209,23 @@ Tiene sentido añadir un setter cuando el cambio es simple, no rompe invariantes
 
 ## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
 
-### Respuesta
+1.¿Cómo se comparan objetos de una misma clase en POO? ¿Por su contenido o por su identidad? 
+
+Depende de qué quieras comparar: 
+-Por indentidad: Compara si son el mismo objeto en memoria,es decir, si dos referencias apuntan exactamente al mismo objeto (==)  
+-Por contenido (estado): Compara si los objetos tiene los mismos valores en sus atributos,aunque sean objetos distintos en memoria (equals())
+
+2.¿Qué es el metodo equals en Java? 
+
+equals es un método de la clase object, que todas las clases heredan. Su propósito es comparar objetos lógicamente, no por referencia  
+
+3.¿Cómo se deben comparar dos cadenas en Java? 
+
+Las cadenas en Javan se comparan con equals, no con ==
+
+```java 
+if (s1.equals(s2)) { ... }
+```
 
 
 ## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
