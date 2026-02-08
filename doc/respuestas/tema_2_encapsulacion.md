@@ -121,19 +121,85 @@ Si, tiene sentido, pero solo en casos concretos, un constructor privado impide q
 ### Respuesta
 
 
-## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clase"?
+## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clases? 
 
-### Respuesta
+Si haces el atributo público y además pones getters/setters públaicos, en la paractiva no ganas nada: cualquiera puede saltarse los métodos y tocar el estado directamente 
+La clave es que el getter/setter no solo es un "acceso", es un punto de control 
+
+```java
+private int edad;
+
+public void setEdad(int edad) {
+    if (edad < 0) {
+        throw new IllegalArgumentException("La edad no puede ser negativa");
+    }
+    this.edad = edad;
+}
+```
+Si edad fuera pública, este control sería imposible de garantizar 
+
+La conveción más extendida es: atributos provados, acceso a través de métodos 
+Eso se suele resumir como: encapsulación, ocultar estado y programar contra interfaces, no contra immplementación
+
+Sí, esta totalmente relacionado con las variantes de clases. Estas son reglas que siempre deben cumplirse. Si los atributos son púublicos cualquier código externo puede romper esas invariantes y la clase deja de ser dueña de su propio estado, sin embargo, si los atributos son privados la clase controla cuándo y cómo cambia su estado y las invariantges se validan en constructores y métodos 
 
 
 ## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
 
-### Respuesta
+1.¿Que significa que una clase sea "inmutable"? 
+
+Una clase es inmutable cuando una vez creado un objeto, su estado no puede cambiar nunca. Es decir, sus atributos no se modifican después del contructor y cualquier "cambio" produce un nuevo onjeto, no modifica el existente 
+
+```java 
+public final class Dinero {
+    private final BigDecimal importe;
+    private final String moneda;
+
+    public Dinero(BigDecimal importe, String moneda) {
+        this.importe = importe;
+        this.moneda = moneda;
+    }
+}
+``` 
+Una vez creado, en el main: :
+```java 
+Dinero d = new Dinero(100, "EUR");
+// no hay forma de cambiar importe ni moneda
+```
+
+Entonces, como "cambiarias" algo?
+Creando otro objeto: 
+```java 
+public Dinero sumar(BigDecimal cantidad) {
+    return new Dinero(this.importe.add(cantidad), this.moneda);
+}
+```
+2.¿Qué es un método modificador? 
+
+Un método modificador es cualquier método que cambia el estado interno del objeto 
+
+3.¿Un método modificador es siempre un setter? 
+
+No, un setter es solo un tipo concreto de método modificador 
+
+4.¿Tiene ventajas que una clase sea inmutable? 
+Si: 
+-Invariantes garantizadas 
+-Mucho más facil de razonar 
+-Thrad-safe gratis 
+-Menos efectos colaterales 
+-Perfectas como value objects 
 
 
 ## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
 
-### Respuesta
+En general no, solo es recomendable incluirlos cuando tengan sentido. Tener setters siempre y como conveción suele ser una  mala señal de diseño: 
+-Rompen la encapsulación 
+-Convierten las clases en un "struct con métodos" 
+-Hacen los objetos frágiles 
+
+Tiene sentido añadir un setter cuando el cambio es simple, no rompe invariantes y representa algo natural del dominio 
+
 
 
 ## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
