@@ -86,13 +86,15 @@ Cada lenguaje tiene su propia "personalidad" para manejar la privacidad:
 
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
 
-### Respuesta
+En programación orientada a objetos, los getter y los setter son métodos que sirven para acceder y modificar los atributos (variables) de un objeto de gorma controlada
+Getter-> obtiene el valor de un atributo 
+Setter-> cambia el valor de un atributo 
+
 
 
 ## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
 
-### Respuesta
-
+No, se refiere a que mejora la seguridad, se habla de seguridad lógica y estructural, no de ciberseguridad. Es decir, proteger el estado interno del objeto de usos incorrectos dentro del propio programa 
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
@@ -101,7 +103,7 @@ Cada lenguaje tiene su propia "personalidad" para manejar la privacidad:
 
 ## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
 
-### Respuesta
+Si, tiene sentido, pero solo en casos concretos, un constructor privado impide que otras clases creen instancias libremente. Eso se usa cuando quieres controlar cómo y cuántos objetos existen
 
 
 ## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
