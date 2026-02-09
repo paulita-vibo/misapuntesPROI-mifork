@@ -188,14 +188,22 @@ static final double PI = 3.1416;
 
 javac Main.java
 java Main
-Java se compila, pero no a código máquina.
 
+Java se compila, pero no a código máquina.
 Se compila a byte-code (.class).
 
 Máquina Virtual de Java (JVM)
 Ejecuta el byte-code
 Permite que Java sea multiplataforma
 
+.java-----------------------> .class------------------> JVM (Stact y Heap)
+        javac (compilador)               java 
+
+________________________________________        _______________________________
+     TIEMPO DE COMPILACIÓN                             TIEMPO DE EJECUCIÓN
+
+VENTAJA: portabilidad 
+DESVENTAJA: rendimiento
 
 ## 11. En el código anterior de la clase `Punto` ¿Qué es `new`? ¿Qué es un **constructor**? Pon un ejemplo de constructor en una clase `Empleado` que tenga DNI, nombre y apellidos
 
@@ -203,7 +211,6 @@ Permite que Java sea multiplataforma
         String dni;
         String nombre;
         String apellidos;
-    
         Empleado(String dni, String nombre, String apellidos) {
             this.dni = dni;
             this.nombre = nombre;
