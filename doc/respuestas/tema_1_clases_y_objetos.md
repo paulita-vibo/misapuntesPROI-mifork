@@ -251,12 +251,33 @@ double distanciaA(Punto otro) {
 
 ## 14. El paso del `Punto` como parámetro a un método, es **por copia** o **por referencia**, es decir, si se cambia el valor de algún atributo del punto pasado como parámetro, dichos cambios afectan al objeto fuera del método? ¿Qué ocurre si en vez de un `Punto`, se recibiese un entero (`int`) y dicho entero se modificase dentro de la función? 
 
-    double distanciaA(Punto p) {
-        return Math.sqrt(
-            (this.x - p.x) * (this.x - p.x) +
-            (this.y - p.y) * (this.y - p.y)
-        );
+Por copia: por un lado tenemos un entero y se copia (en la funcion)
+    Primitivos: por valor
+```java 
+int coordenadaX=4; 
+int coordenadaY=5; 
+
+Punto (int x, int y ){
+    this.x=x; 
+    this.y=y; 
+}
+
+```
+objetos: por copia de la referencia 
+```java 
+
+   double distanciaA(Punto otro) {
+        double dx = this.x - otro.x;
+        double dy = this.y - otro.y;
+        return Math.sqrt(dx * dx + dy * dy);
+
+        otro= new Punto(10,10);   //tipo primitivo (referencia)-> se pasa copiando la referencia 
+        return Math.sqrt (dx*dx + dy*dy); 
     }
+```
+
+    Al invocar la funcion no va cambiar el valor-> tiene que ser x copia de la referencia 
+
     
 
 ## 15. ¿Qué es el método `toString()` en Java? ¿Existe en otros lenguajes? Pon un ejemplo de `toString()` en la clase `Punto` en Java
