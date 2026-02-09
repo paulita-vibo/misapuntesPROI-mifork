@@ -207,6 +207,24 @@ DESVENTAJA: rendimiento
 
 ## 11. En el código anterior de la clase `Punto` ¿Qué es `new`? ¿Qué es un **constructor**? Pon un ejemplo de constructor en una clase `Empleado` que tenga DNI, nombre y apellidos
 
+new: 
+-Reserva memoria 
+-Invoca constructor 
+-Es una expresión (puedo asignarla a una variable, o usarla directamente en linea)
+
+
+## 12. ¿Qué es la referencia `this`? ¿Se llama igual en todos los lenguajes? Pon un ejemplo del uso de `this` en la clase `Punto`
+
+this: :
+-Referencia al objeto actual
+-Sirve para desambiguar, o aclarar 
+-No está disponible en métodos static 
+
+Otros lenguajes: Puede tener otro nombre; 
+Java, C++ → this
+Python → self
+
+
     class Empleado {
         String dni;
         String nombre;
@@ -218,16 +236,17 @@ DESVENTAJA: rendimiento
         }
     }
 
-## 12. ¿Qué es la referencia `this`? ¿Se llama igual en todos los lenguajes? Pon un ejemplo del uso de `this` en la clase `Punto`
-
-this es una referencia al objeto actual
-No se llama igual en todos los lenguajes:
-Java, C++ → this
-Python → self
-
 ## 13. Añade ahora otro nuevo método que se llame `distanciaA`, que reciba un `Punto` como parámetro y calcule la distancia entre `this` y el punto proporcionado
 
-### Respuesta
+```java 
+double distanciaA(Punto otro) {
+        double dx = this.x - otro.x;
+        double dy = this.y - otro.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+```
+
 
 
 ## 14. El paso del `Punto` como parámetro a un método, es **por copia** o **por referencia**, es decir, si se cambia el valor de algún atributo del punto pasado como parámetro, dichos cambios afectan al objeto fuera del método? ¿Qué ocurre si en vez de un `Punto`, se recibiese un entero (`int`) y dicho entero se modificase dentro de la función? 
