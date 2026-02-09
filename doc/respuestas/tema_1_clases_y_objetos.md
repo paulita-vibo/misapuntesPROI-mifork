@@ -91,11 +91,24 @@ Aunque la mayoría de los lenguajes populares (como Java, C++, Python o C#) se b
 
 ## 6. ¿Dónde se almacenan en memoria los objetos? ¿Es igual en todos los lenguajes? ¿Qué es la **recolección de basura**? 
 
-En Java, los objetos se almacenan en el heap (montón).
+En Java, los objetos se almacenan en la memoria, en concreto en el Heap
+Es una zona de memoria sin estructura donde se va asignando el estado de los nuevos objetos que se van creando 
+
+VENTAJAS DE USAR HEAP: 
+-Reservo dinámicamente, el tamaño se decide en ejecucion (reserva justo lo que vamos a necesitar)
+-Lo que está en el heap, vive más allá que el método o función donde se ha creado  (si yo creo un objeto en una funcion, en vez de crearse en el stack y morir usamos heap y lo usamos hasta que se libere->hasta el final del programa o hasta que se libere)
+
+DESVENTAJAS: 
+-Hay que liberarla cuando ya no se necesita (puede haber perdidad de memoria por lo que cuando no vayas utilizar un objeto tienes que liberarlo )
+    Manual-> Dificil de hacer 
+    Automática-> Por ejemplo con un "Recolector de basura" (hace delete en segundo plano-> sobrecarga)
+                 ¿Existe un lenguaje que sea seguro en memoria y sin recolector de basura? 
+                 Rusk
 
 Las referencias a esos objetos suelen estar en la pila (stack).
 
-No es igual en todos los lenguajes:C++ puede usar heap o stack, Java siempre usa heap para objetos.
+En la mayoria de los leguanjes se usa heap, pero otros permiten Heap y Stack
+No es igual en todos los lenguajes:C++ puede usar heap o stack, Java siempre usa heap para objetos (se crean siempre con el operador new)
 
 Recolección de basura es un mecanismo automático que detecta objetos que ya no se usan y libera su memoria automáticamente
 
@@ -133,15 +146,42 @@ Sobrecarga de métodos: consiste en definir varios métodos con el mismo nombre,
 
 El punto de entrada es: public static void main(String[] args)
 
+```java 
+class Ejercicio1{
+    public static void main (String []args){
+
+    }
+}
+```
+A nivel de maquina todas las funciones tienen que estar dentro de una clase
+Es un método que no devuelve nada de manera explicita (void)
+
+Si quiero devolver algo (un numero 2 en este caso)-> 
+```java 
+class Ejercicio1{
+    public static void main (String []args){
+        System.exit(2); 
+    }
+}
+```
+
 ¿Qué es static?-> Significa que el método pertenece a la clase, no a los objetos.Se puede usar sin crear una instancia.
+-Dice que el atributo o método pertenece a la clase, no a una instancia concreta 
+-No se necesita un objeto para usarlos, desde fuera se usa el nombre de la clase (Integer.parserInt, la clase es Integer)
+-No existe this 
+-No puedo usar desde un método static nada que no sea static 
+-> No obusar!! 
+
 
 ¿Solo se usa en main?
 No. Se usa también en métodos, atributos y bloques estáticos.
 
 ¿Para qué se combina con final?
+En vez de metodos, podemos ver atributos convinados con static final 
 static final define constantes:
 
 static final double PI = 3.1416;
+    final-> una vez asignado PI, no puedo reasignar ese valor (no puedo hacer PI=3.18)
 
 
 ## 10. Intenta ejecutar un poco de Java de forma básica, con los comandos `javac` y `java`. ¿Cómo podemos compilar el programa y ejecutarlo desde linea de comandos? ¿Java es compilado? ¿Qué es la **máquina virtual**? ¿Qué es el *byte-code* y los ficheros `.class`?
