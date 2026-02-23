@@ -208,27 +208,133 @@ No, esto no es ciberseguridad, es facilitar una programación con menos buggs
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
-### Respuesta
+***CLASE 
+Un miembro de clase no está asociado a ninguna instancia si no que; es compartido por todas las instancias 
+    En métodos, no hay this 
+Un miembro de instancia está asociado a cada instancia; no son compartidos 
 
 
 ## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
 
 Si, tiene sentido, pero solo en casos concretos, un constructor privado impide que otras clases creen instancias libremente. Eso se usa cuando quieres controlar cómo y cuántos objetos existen
 
+***CLASE 
+Tiene sentido? A veces 
+    -Un constructor auxiliar oculto,llamado desde otros constructores públicos 
+    -Cuando prefiero usar métodos factoría (inicializador statico)
+        -Cuando quiero controlar el nº de instancias 
+    
 
 ## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
 
-### Respuesta
+***CLASE 
+Con static 
 
 
 ## 14. Como sería un método factoría dentro de la clase `Punto` para construir un `Punto` a partir de dos coordenadas, pero que las redondee al entero más cercano. Escribe sólo el código del método, no toda la clase ¿Has usado `static`? 
 
-### Respuesta
+***CLASE 
+```java 
+    class Punto {                      
+        private double x; 
+        private double y; 
+        
+        public Punto (double x, double y){ 
+            this.x=x; 
+            this.y=y; 
+        }
+        //SI QUEREMOS OCULTAR EL CONSTRUCTOR//
+        public static Punto nuevoEn (double x, double y){
+            return new Punto (x,y); 
+
+        }
+        ////////////////////
+        /// 
+            //METODO FACTORIA///////////////////////////////////////////////////////////////////////////////////////////////////////
+        public static Punto puntoRedondeado(double x, double y){
+           return new Punto (Math.round(x), Math.round(y));                              
+
+        }
+            ////////////////////////////////////////
+
+        public double distanciaAOrigen(){         
+            return Math.sqrt(this.x*this.x+this.y*this.y);                                                     
+        }
+
+        public double distaciaAOtroPunto (Punto otro){
+            double dx =this.x-otro.x; 
+            double dy=this.y-otro.y; 
+            return Math.sqrt(dx*dx+dy*dy); 
+        }
+        public double get(){
+            return this.x; 
+        }
+        public void setX(double x){  
+            this.x=x; 
+        }
+        public String getNombre(){  
+            return this.nombre; 
+        }
+
+    }
+
+    class EjercicioEncapsulacion{
+        public static void main (String []args){
+            Punto p =Punto.puntoRedondeado(4.5,6.7); 
+            Punto p2=Punto.en(2,3); 
+        }
+    }
+
+``` 
+
 
 
 ## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
 
-### Respuesta
+***CLASE 
+```java 
+    class Punto {
+        private double x; 
+        private double y; 
+
+        private double []coordenadas = new double [2]; 
+        
+        public Punto (double x, double y){ 
+            this.coordenadas[0]=x; 
+            this.coodenadas[1]=y; 
+        }
+
+         public double getX(){                  //Son primitivas, trabajan directamente con la base interna
+            return this.coordenadas[0];
+
+         }
+
+         public double getY(){
+            return this.coordenadas [1]; 
+         }
+       
+       //-------------------------------- Arriba primitivas, Abajo derivadas o no primitivas (estan programadas en base a las primitivas)
+
+        public double distanciaAOrigen(){         
+            return Math.sqrt(this.getX()*this.getX()+this.getY()*this.getY());                                                     
+        }
+
+        public double distaciaAOtroPunto (Punto otro){
+            double dx =this.getX()-otro.getX(); 
+            double dy=this.getY()-otro.getY(); 
+            return Math.sqrt(dx*dx+dy*dy); 
+        }
+       
+        class EjercicioEncapsulacion{
+        public static void main (String []args){
+            Punto p =new Punto(4,5); 
+            System.out.println("Tu punto está en: "+p.)      ?????????????????????
+            System.out.println (p.distanciaAOrigen()); 
+        }
+
+    }  
+    }              
+``` 
 
 
 ## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clases? 
