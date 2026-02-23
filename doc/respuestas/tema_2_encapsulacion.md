@@ -339,7 +339,7 @@ Con static
 
 ## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clases? 
 
-Si haces el atributo público y además pones getters/setters públaicos, en la paractiva no ganas nada: cualquiera puede saltarse los métodos y tocar el estado directamente 
+Si haces el atributo público y además pones getters/setters publicos, en la paractiva no ganas nada: cualquiera puede saltarse los métodos y tocar el estado directamente 
 La clave es que el getter/setter no solo es un "acceso", es un punto de control 
 
 ```java
@@ -359,6 +359,13 @@ Eso se suele resumir como: encapsulación, ocultar estado y programar contra int
 
 Sí, esta totalmente relacionado con las variantes de clases. Estas son reglas que siempre deben cumplirse. Si los atributos son púublicos cualquier código externo puede romper esas invariantes y la clase deja de ser dueña de su propio estado, sin embargo, si los atributos son privados la clase controla cuándo y cómo cambia su estado y las invariantges se validan en constructores y métodos 
 
+
+***CLASE 
+Si los hago publicos: 
+    -Para poder garantizar la variante de clase 
+    -Para poder cambiar la representacion interna 
+    -Convencion es: 
+        atributos siempre privadso y emplear métodos de acceso(para poder tener un acceso controlado)  
 
 ## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
 
@@ -407,6 +414,13 @@ Si:
 -Perfectas como value objects 
 
 
+***CLASE 
+1. INMUTABLE-> Su estado no cambia 
+2. Método modificador-> Cualquier método que cambia el estado interno, por ejemplo un setter 
+3. No, pero un setter si es un metodo modificador. Pero no todos los metodos modificadores son setter
+4. Si, las clases inmutables tienen ventajas-> no pongo setters (si los pongo pierdo la inmutabilidad de mi clase)-> no hacer clases mutables comp primera opcion 
+
+
 ## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
 
 En general no, solo es recomendable incluirlos cuando tengan sentido. Tener setters siempre y como conveción suele ser una  mala señal de diseño: 
@@ -416,11 +430,15 @@ En general no, solo es recomendable incluirlos cuando tengan sentido. Tener sett
 
 Tiene sentido añadir un setter cuando el cambio es simple, no rompe invariantes y representa algo natural del dominio 
 
+***CLASE 
+No, si no ya haria solo clases mutables 
+
 
 
 ## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
 
-### Respuesta
+***CLASE 
+La clase String es inmutable 
 
 
 ## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
