@@ -162,11 +162,49 @@ En programación orientada a objetos, los getter y los setter son métodos que s
 Getter-> obtiene el valor de un atributo 
 Setter-> cambia el valor de un atributo 
 
+***CLASE 
+"getter" y "setter" permiten dar acceso a atributos privados para obtener su valor o cambiarlo 
+```java 
+    class Punto {                      
+        private double x; 
+        private double y; 
+        
+        public Punto (double x, double y){ 
+            this.x=x; 
+            this.y=y; 
+        }
+
+        public double distanciaAOrigen(){         
+            return Math.sqrt(this.x*this.x+this.y*this.y);                                                     
+        }
+
+        public double distaciaAOtroPunto (Punto otro){
+            double dx =this.x-otro.x; 
+            double dy=this.y-otro.y; 
+            return Math.sqrt(dx*dx+dy*dy); 
+        }
+        public double get(){
+            return this.x; 
+        }
+        public void setX(double x){  //Para modificar el valor recibe el valor al que lo quiero cambiar y luego lo devuelvo (return)
+            this.x=x; 
+        }
+        public String getNombre(){   //Los String se pasan por copia de la referencia
+            return this.nombre; 
+        }
+
+    }
+
+``` 
+
 
 
 ## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
 
-No, se refiere a que mejora la seguridad, se habla de seguridad lógica y estructural, no de ciberseguridad. Es decir, proteger el estado interno del objeto de usos incorrectos dentro del propio programa 
+No, se refiere a que mejora la seguridad, se habla de seguridad lógica y estructural, no de ciberseguridad. Es decir, proteger el estado interno del objeto de usos incorrectos dentro del propio programa
+
+***CLASE 
+No, esto no es ciberseguridad, es facilitar una programación con menos buggs 
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
