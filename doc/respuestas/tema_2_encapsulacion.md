@@ -26,6 +26,13 @@ Alguna de sus ventajas son:
 -Facilita la reutilización 
 -Mejora la comprensión del código 
 
+****CLASE
+ La encapsulacion tiene que ver con "Protección": 
+    -Evito estados no validos de mis objetos 
+    -Evito dependencias desde fuera que no quiero 
+
+    2 Partes-> He juntado estado y comportamiento en un artefacto (la clase), y ahora puedo ocultar ciertas partes del exterior 
+
 
 
 ## 2. ¿Qué se entiende por la **interfaz pública** de un objeto o clase en POO? Describe brevemente cómo se relaciona con la ocultación de información.
@@ -37,6 +44,9 @@ La ocultación de información se apoya directamente en la interfaz pública:
 -Los detalles internos de implementación (atributos y métodos private) quedan ocultos 
 -El usuario de la clase no puede acceder ni depender del estado interno, solo usar la interfaz 
 
+***CLASE 
+ Interfaz pública: Los miembros (atributos/metodos indestinguidamente) que se ven desde fuera, es decir, los que no están ocultos 
+
 
 ## 3. Brevemente: ¿Por qué hay que ser conscientes y diseñar con cuidado la **interfaz pública** de una clase? ¿Es fácil cambiarla?
 
@@ -44,16 +54,42 @@ Porque es la parte visible y estable del contrato con el resto del sistema. Todo
 
 No es facil cambiar la interfaz pública ya que rompe dependencias, propaga cambios, afecta a la reutilización y compatibilidad y puede producir errores sutiles 
 
+***CLASE 
+La interfaz pública si se cambia tiene más consecuencias que cualquier cambio en la parte oculta 
+
 ## 4. ¿Qué son las **invariantes de clase** y por qué la ocultación de información nos ayuda?
 
-Las invariantes de clases son condiciones que deben cumplirse siempre para que un  objeto esté en un estado válido, antes y despues de ejecutar cualquier método público de la clase. Describen las reglas internas que definen la coherencia del objeto 
+Las invariantes de clases son condiciones que deben cumplirse siempre para que un  objeto esté en un estado válido (sea mutable),  antes y despues de ejecutar cualquier método público de la clase. Describen las reglas internas que definen la coherencia del objeto 
 
 La ocultación de información es clave porque impide modificaciones directas del estado interno, centraliza el control del estado, facilita la vadilación y reduce errores y estados inconscientes
 
+***CLASE 
+INVARIANTES DE CLASE-> Condiciones que los objetos de esa clase cumplen o deben cumplir para ser válidos y durante toda la vida del objeto 
+    Ej: Cuenta bancaria debe tener siempre saldo positivo (invariante de clase)
+        Persona debe tener edad>=0
+        Rectángulo debe tener ancho y alto>0
+
+    ¿Es una invariante de clase decir que una variable tiene que ser un numero entero? Si, sistema de tipos ?????????????
 
 
 ## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
+```java 
+    class Punto {                       //Ahora mismo tengo garantizado que una vez se crea no va cambiar el valor de sus coordenadas
+        private double x; 
+        private double y; 
+        
+        public Punto (double x, double y){ //Interfaz publica 
+            this.x=x; 
+            this.y=y; 
+        }
 
+        double distanciaAOrigen(){         //Si no le pongo nada es visible pero desde clases del mismo paquete , tb seria interfaz publica pero
+            return Math.sqrt(this.x*this.x+this.y*this.y);                                                      //solo para los de mi paquete 
+        }
+
+    }
+
+``` 
 
 
 
@@ -62,6 +98,11 @@ La ocultación de información es clave porque impide modificaciones directas de
 El uso de modificadores de acceso public y private depende del nivel de estructura. 
 public: La clase es accesible desde cualquier otra clase en cualquier paquete 
 private: No se puede aplicar a clases de nivel superior 
+
+***CLASE 
+En java 
+    LPublic:clases, atributos y métodos 
+    Lprivate: clases internas (nolos estamos viendo), atributos y métodos 
 
 
 ## 7. En POO, la visibilidad puede ser pública o privada, pero ¿existen más tipos de visibilidad? ¿Qué ocurre en Java? ¿Y en otros lenguajes?
