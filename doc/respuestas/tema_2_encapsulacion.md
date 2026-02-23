@@ -119,10 +119,41 @@ Cada lenguaje tiene su propia "personalidad" para manejar la privacidad:
 -Python no tiene restricciones reales. Todo es público técnicamente, pero se usan convenciones de nombres (_variable, _ _ variable) 
 -JavaScript usa el símbolo # antes del nombre de la variable para marcarla como privada de forma nativa 
 
+***CLASE 
+En java 
+    -protected, solo se ve desde "subclases" (las veremos en el tema de herencia)
+    -"packaged-private" o sin modificador, solo se ve desde el paquete 
+
 
 ## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
 
-### Respuesta
+***CLASE 
+I¿Para qn esta oculto para las mismas clases o para las instancis del objeto? 
+```java 
+    class Punto {                       //Ahora mismo tengo garantizado que una vez se crea no va cambiar el valor de sus coordenadas
+        private double x; 
+        private double y; 
+        
+        public Punto (double x, double y){ //Interfaz publica 
+            this.x=x; 
+            this.y=y; 
+        }
+
+        public double distanciaAOrigen(){         
+            return Math.sqrt(this.x*this.x+this.y*this.y);                                                     
+        }
+
+        public double distaciaAOtroPunto (Punto otro){
+            double dx =this.x-otro.x; 
+            double dy=this.y-otro.y; 
+            return Math.sqrt(dx*dx+dy*dy); 
+        }
+
+    }
+
+``` 
+¿Esto complila? -> Si 
+La a, está oculta para código de otras clases 
 
 
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
