@@ -223,12 +223,37 @@ Aquí te detallo las ventajas estratégicas que ofrece frente al modelo de C:
 
 ## 6. En orientación a objetos, ¿las excepciones suelen ser objetos? ¿Qué ventajas tiene esto en términos de encapsulación? ¿Podemos entonces crear excepciones personalizadas?
 
-### Respuesta
+1.¿las excepciones suelen ser objetos?
+    Si, en los lenguajes modernos de Orientación a Objetos (OO) como Java, C#, C++ o Python, las excepciones son objetos 
+    Esto significa que cuando ocurre un error, el sistema crea una instancia de una clase de excepción (como ArithmeticException o FileNotFoundException) que empaqueta todo lo que ocurrió en ese momento.
+
+2.Ventajas en términos de Encapsulación
+    La encapsulación consiste en agrupar datos y comportamiento, ocultando la complejidad. Al ser objetos, las excepciones ofrecen ventajas: 
+
+    -Estado Interno: Una excepción objeto puede guardar mucho más que un "mensaje de error". Puede almacenar la hora del fallo, el ID del usuario que lo provocó, el valor ilegal que causó el problema o incluso una referencia a la conexión de base de datos que falló.
+
+    -Comportamiento (Métodos): Las excepciones pueden tener métodos. Por ejemplo, una excepción de red podría tener un método .getRetryDelay() que le diga al programa cuánto tiempo esperar antes de reintentar, o .logError() para guardarse a sí misma en un archivo de diagnóstico.
+
+    -Jerarquía y Clasificación: Gracias a la herencia, podemos capturar errores de forma genérica o específica. Puedes capturar una IOException para manejar cualquier error de entrada/salida, o ser específico y capturar solo FileNotFoundException 
+
+3.¿Podemos entonces crear excepciones personalizadas?
+    Sí, y es una de las mejores prácticas en el desarrollo profesional. Crear tus propias excepciones permite que tu código hable el "lenguaje del negocio".
+
+    En lugar de usar un genérico IllegalArgumentException para todo, se puede crear algo específico
+
 
 
 ## 7. En relación con las ventajas de la encapsulación, comparando el ejemplo en C con Java. ¿Qué **información esencial** lleva cualquier **objeto excepción** que es muy útil tener cuando se llega a un manejador?
 
-### Respuesta
+Cuando una función en Java lanza una excepción y esta llega a manos del programador (en el catch), no recibe solo un aviso de "algo falló". Recibe un objeto que contiene tres datos vitales que en C no existen de forma automática:
+
+1.El Nombre del Error (Identidad): En C, un -1 puede significar muchas cosas.En Java, el objeto tiene un nombre claro, como RaizNegativaException. Esto permite saber exactamente qué tipo de problema ocurrió sin tener que adivinar.
+
+2.El Mensaje (La Explicación): El objeto guarda una frase escrita por el programador que explica el fallo (ej: "Error: Intentaste calcular la raíz de -5"). Es como una etiqueta que te dice qué pasó exactamente en lenguaje humano.
+
+3.La "Ruta del Crimen" (Stack Trace): Esta es la parte más útil. El objeto sabe exactamente en qué archivo, en qué función y en qué línea de código saltó el error. Además, dice qué funciones llamaron a qué funciones hasta llegar ahí. 
+
+4.Datos Extra (Contexto): Al ser un objeto, puedes guardar dentro cualquier cosa que ayude. Si falló una transferencia bancaria, el objeto puede llevar dentro el número de cuenta y el monto que falló. En C, tendrías que buscar esos datos por otro lado; en Java, vienen "dentro" del error.
 
 
 ## 8. En Java, sobre el bloque **"try-catch"**, ¿se pueden tener más de un bloque `catch`? ¿cuántos bloques `catch` se ejecutan?
