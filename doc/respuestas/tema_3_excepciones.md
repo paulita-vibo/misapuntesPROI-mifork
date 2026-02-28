@@ -258,13 +258,89 @@ Cuando una función en Java lanza una excepción y esta llega a manos del progra
 
 ## 8. En Java, sobre el bloque **"try-catch"**, ¿se pueden tener más de un bloque `catch`? ¿cuántos bloques `catch` se ejecutan?
 
-### Respuesta
+1.¿Se pueden tener más de un bloque catch?
+    Sí. Es muy común y recomendable. Un solo bloque try  puede ir seguido de varios bloques catch diseñados para atrapar diferentes tipos de problemas.
+
+    Esto permite que el programa reaccione de forma específica según lo que haya fallado. No es lo mismo que falte un archivo a que el servidor de internet se haya caído.
+
+2.¿Cuántos bloques catch se ejecutan?
+    Solo se ejecuta uno (o ninguno). Aunque tengas una lista de diez bloques catch, en el momento en que ocurre una excepción, Java busca de arriba hacia abajo cuál es el primero que "encaja" con el error.
+
+    Si encuentra uno que encaja, ejecuta ese bloque y se salta todos los demás.
+
+    Si no ocurre ningún error, no se ejecuta ninguno.
+
+        Ejemplo: 
+```java
+         try {
+                // 1. Código que puede fallar de varias formas
+                descargarArchivo();
+                double r = calcularRaiz(-5); 
+            } 
+            catch (FileNotFoundException e) {
+                // Se ejecuta solo si el archivo no existe
+                System.out.println("Error: No encontré el archivo.");
+            } 
+            catch (RaizNegativaException e) {
+                // Se ejecuta solo si el cálculo matemático falla
+                System.out.println("Error: No puedo calcular esa raíz.");
+            } 
+            catch (Exception e) {
+                // Este es un "comodín" para cualquier otro error no previsto
+                System.out.println("Ocurrió un error desconocido.");
+            }
+```
+IMPORTATNE: Un bloque try puede estar escoltado por múltiples bloques catch para gestionar distintos errores de forma personalizada. Sin embargo, ante un fallo, solo se ejecutará el primer catch que sea compatible con la excepción lanzada. Por ello, es obligatorio ordenar los bloques de lo más específico a lo más general.
+
+
 
 
 ## 9. Si las excepciones producen rupturas en el código llamador, ¿cómo podemos garantizar que se ejecuta siempre finalmente un código necesario para cierre de ficheros, liberacion de recursos, antes de que continúe propagándose la excepción? Pon un ejemplo en Java con `finally`, tanto con `catch` como sin él.
 
-### Respuesta
+El Bloque finally: La Red de Seguridad
+El bloque finally es una sección de código que se garantiza que se ejecutará siempre, independientemente de si se lanzó una excepción o si el código funcionó perfectamente. Es el lugar ideal para colocar las tareas de "limpieza" o liberación de recursos (cerrar un archivo, cerrar una conexión a Internet o una base de datos).
 
+Reglas clave:
+Ejecución garantizada: Se ejecuta si el try termina con éxito.
+Ejecución tras el error: Se ejecuta después de que un catch maneje el error.
+Ejecución en propagación: Si nadie captura el error, el bloque finally se ejecuta justo antes de que la excepción siga subiendo por la pila de llamadas hacia la siguiente función.
+
+Ejemplo 1: 
+Con catch (Manejo completo)
+Se usa cuando quieres arreglar el error y además limpiar recursos.
+```java 
+        try {
+            abrirArchivo();
+            System.out.println("Leyendo dato: " + calc.raiz(-5));
+        } catch (RaizNegativaException e) {
+            System.out.println("Error matemático detectado.");
+        } finally {
+            // Esto se ejecuta SIEMPRE: tanto si la raíz fue bien como si saltó el catch
+            cerrarArchivo();
+            System.out.println("Recurso liberado.");
+        }
+```
+
+Ejemplo 2:
+Sin catch (Solo limpieza)
+A veces no quieres capturar el error (prefieres que se propague a una función superior), pero sí tienes la obligación de cerrar lo que abriste.
+```java 
+public void procesar() throws Exception {
+    try {
+        abrirConexionInternet();
+        hacerCalculoComplicado(); // Si esto falla, la función se interrumpe
+    } finally {
+        // Aunque el error suba a la función de arriba,
+        // Java no se olvida de pasar por aquí antes de irse.
+        cerrarConexionInternet();
+        System.out.println("Conexión cerrada antes de propagar el error.");
+    }
+}
+```
+
+Resumen: El bloque finally actúa como un seguro de cierre. Su propósito principal es evitar la fuga de recursos.
+         Mientras que el catch es para decidir qué hacer con el problema, el finally es para dejar la casa limpia antes de continuar o de que el programa se detenga por el error.
+  
 
 ## 10. En Java, el bloque `finally` puede ir sin `catch`? ¿Se ejecuta siempre tanto si ocurre como si no ocurre una excepción? ¿Y si hay un `return` en medio del `try`?
 
