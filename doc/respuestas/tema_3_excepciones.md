@@ -452,12 +452,63 @@ TRUCO: Si el cliente del código no puede hacer nada para solucionar el problema
 
 ## 13. Pon un ejemplo en Java de firma de método que incluya `throws`, de una función que abre un fichero pero que declara que no le interesa menejar la excepción de si el fichero no existe, sino que se propague hacia arriba. Eso sí, acuérdate del `finally`.
 
-### Respuesta
+```java 
+import java.io.*;
+
+public class GestorArchivos {
+
+    // La firma indica que este método puede lanzar FileNotFoundException
+    public void abrirYLeer(String ruta) throws FileNotFoundException {
+        BufferedReader lector = null;
+
+        try {
+            // Intentamos abrir el archivo
+            File archivo = new File(ruta);
+            lector = new BufferedReader(new FileReader(archivo));
+            
+            System.out.println("Leyendo primera línea: " + lector.readLine());
+            
+        } catch (IOException e) {
+            // Aquí podríamos manejar errores de lectura, 
+            // pero FileNotFoundException sigue su camino hacia arriba 
+            // gracias al 'throws' en la firma.
+            System.err.println("Error de entrada/salida: " + e.getMessage());
+        } finally {
+            // El bloque finally se ejecuta SIEMPRE, haya error o no.
+            // Es el lugar sagrado para cerrar recursos.
+            try {
+                if (lector != null) {
+                    lector.close();
+                    System.out.println("Recurso cerrado correctamente.");
+                }
+            } catch (IOException e) {
+                System.err.println("No se pudo cerrar el lector.");
+            }
+        }
+    }
+}
+```
 
 
-## 14. ¿Podemos poner en `throws` excepciones no controladas, como `RuntimeException`? ¿Debería el método llamador entonces poner `try-catch` en ese caso? ¿Qué sentido tendría?
+## 14. ¿Podemos poner en `throws` excepciones no controladas, como `RuntimeException`? ¿Debería el método llamador entonces poner `try-catch` en ese caso? ¿Qué sentido tendría? 
 
-### Respuesta
+Si, pero con las exepciones controladas cambian 
+
+1.¿Se puede poner una RuntimeException en el throws?
+    Sí. Java te permite declarar cualquier excepción en la firma del método, ya sea checked (como IOException) o unchecked (como NullPointerException o ArithmeticException). El compilador no te obliga, pero no te lo prohíbe.
+
+2.¿Debe el método llamador usar try-catch?
+    No es obligatorio. A diferencia de las excepciones controladas, el compilador de Java no "protestará" si el método que llama ignora una RuntimeException.
+
+    Si no pones try-catch, el programa compila perfectamente.
+    Si la excepción ocurre en tiempo de ejecución y nadie la atrapa, el programa simplemente se detendrá (o el hilo morirá).
+
+3.¿Qué sentido tiene hacerlo?
+    Si no es obligatorio, ¿para qué ensuciar la firma del método? Principalmente por dos razones:
+
+    Documentación (Contrato del método): Es una forma de decirle a otros programadores: "Oye, aunque no te obligue el compilador, ten cuidado porque este método podría lanzar un IllegalArgumentException si me pasas un dato absurdo". Ayuda a que quien use tu código sepa a qué atenerse.
+
+    Claridad en APIs grandes: En frameworks o librerías complejas, declarar una RuntimeException específica ayuda a que las herramientas de generación de documentación (como Javadoc) incluyan esa advertencia de forma explícita.
 
 
 ## 15. ¿Cuándo se recomienda usar excepciones controladas, como `IOException`, y cuándo no controladas como `IllegalArgumentException`? ¿Existen en todos los lenguajes ambas opciones? En los que sólo existe una opción, ¿cuál es la más habitual?
