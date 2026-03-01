@@ -344,18 +344,111 @@ Resumen: El bloque finally actúa como un seguro de cierre. Su propósito princi
 
 ## 10. En Java, el bloque `finally` puede ir sin `catch`? ¿Se ejecuta siempre tanto si ocurre como si no ocurre una excepción? ¿Y si hay un `return` en medio del `try`?
 
-### Respuesta
+1.Sí. La estructura mínima requerida es try-finally. Esto es útil cuando no quieres (o no sabes cómo) manejar la excepción en ese punto, pero necesitas asegurarte de que ciertos recursos se cierren o se limpien (como cerrar un archivo o una conexión a base de datos) antes de que la excepción se propague hacia arriba.
+
+```java 
+try {
+    // Código que podría lanzar una excepción
+} finally {
+    // Código que se ejecuta sí o sí
+}
+```
+
+2.¿Se ejecuta siempre, ocurra o no una excepción?
+Casi siempre. El bloque finally está diseñado para ejecutarse independientemente de si el flujo fue exitoso o si saltó al catch.
+
+Sin embargo, existen excepciones extremas donde no se ejecutaría:
+    Si el hilo muere o la Máquina Virtual (JVM) se detiene abruptamente.
+    Si invocas explícitamente a System.exit(0).
+    Si ocurre un fallo catastrófico de hardware o un error fatal del sistema operativo.
+
+3.¿Y si hay un return en medio del try?
+Esta es la parte más curiosa: El bloque finally gana.
+
+Si tienes un return dentro del bloque try, Java primero evalúa la expresión del return, pero antes de entregar el control a quien llamó al método, ejecuta el contenido del finally.
+
+```java 
+public int prueba() {
+    try {
+        return 1;
+    } finally {
+        System.out.println("Ejecutando finally...");
+    }
+}
+``` 
+En este código primero se verá el mensaje "Ejecuanto finally..." en consola y luego el método devolverá el valor 1. 
+
 
 
 ## 11. En Java, qué son las excepciones **"controladas"** y las **"no controladas"**? ¿Qué papel juega `RuntimeException`? Pon un ejemplo de excepciones típicas controladas y no controladas que incluso nosotros mismos podríamos usar. Haz dos listas con 3 o 4 ejemplos de situación donde se suele preferir una excepción controlada y donde se suele preferir una excepción no controlada.
 
-### Respuesta
+1.Excepciones Controladas (Checked)
+    Son aquellas que el compilador te obliga a gestionar. Si un método lanza una excepción controlada, tienes dos opciones: envolverla en un bloque try-catch o declararla en la firma del método usando throws.
 
+    Herencia: Heredan de Exception (pero no de RuntimeException).
+
+    Filosofía: Se usan para condiciones de error que son recuperables y que no dependen directamente del programador, sino de factores externos (red, archivos, base de datos).
+
+2.Excepciones No Controladas (Unchecked)
+    Son aquellas que el compilador ignora. No estás obligado a capturarlas ni a declararlas.
+
+    Herencia: Heredan de RuntimeException o de Error.
+
+    Filosofía: Se usan para errores de lógica o mal uso de la API (errores de programación). Se asume que el programador debería haber evitado que esto ocurriera en primer lugar.
+
+3.El papel de RuntimeException
+    RuntimeException es la "madre" de todas las excepciones no controladas. Su papel es actuar como una línea divisoria:
+
+    Si tu excepción hereda de ella, el compilador te deja libre.
+    Si hereda de Exception a secas, el compilador se pone estricto.
+
+    Ejemplos típicos:
+    -Controlada: IOException, SQLException, ClassNotFoundException.
+    -No Controlada: NullPointerException, ArrayIndexOutOfBoundsException, ArithmeticException (como dividir por cero).
+
+4.Ejemplos de cuando se prefiere una u otra 
+    Preferimos Excepciones Controladas (Checked)
+        Se usan cuando el error es una contingencia razonable del mundo real.
+
+        Fallo en servicios externos: Cuando intentas conectar con una API de pagos y el servidor no responde.
+
+        Problemas de Archivos: Intentar leer un archivo de configuración que el usuario pudo haber borrado por error.
+
+        Restricciones de Negocio: Por ejemplo, en una app bancaria, lanzar un SaldoInsuficienteException para obligar al programador a decidir qué mostrar al usuario si no hay dinero.
+
+        Base de datos: Cuando una consulta falla porque la tabla está bloqueada temporalmente.
+
+    Preferimos Excepciones No Controladas (Unchecked)
+        Se usan cuando el error indica que el programador "metió la pata" o los datos son inválidos.
+
+        Argumentos Inválidos: Si un método recibe un número negativo donde solo se esperan positivos (IllegalArgumentException).
+
+        Estado Ilegal: Intentar disparar un arma en un juego cuando no tiene munición (IllegalStateException).
+
+        Punteros Nulos: Cuando intentas acceder a un objeto que no ha sido inicializado (NullPointerException).
+
+        Errores de Casting: Intentar convertir un objeto Gato en un objeto Perro (ClassCastException).
+
+TRUCO: Si el cliente del código no puede hacer nada para solucionar el problema de forma automática, usa una No Controlada. Si el cliente debe tomar una decisión para recuperarse, usa una Controlada.
 
 ## 12. ¿Qué es y para qué se usa `throws`? ¿Por qué es alternativa a capturar una excepción controlada?
 
-### Respuesta
+1.¿Qué es y para qué se usa?
+    En Java, throws es una palabra clave que se utiliza en la declaración de un método para indicar que dicho método puede lanzar una o más excepciones durante su ejecución.
 
+    Es, en esencia, un cartel de advertencia para quien sea que llame a ese método.
+    Cuando usas throws, estás delegando la responsabilidad de manejar el error. En lugar de detener el flujo y resolver el problema ahí mismo, el método dice: "Yo no voy a lidiar con esto; que se encargue el que me invocó".
+
+    Sintaxis: Se coloca después de los paréntesis de los argumentos y antes de la llave de apertura.
+
+    Uso principal: Se utiliza casi exclusivamente con excepciones controladas (checked), ya que el compilador exige que estas se declaren o se capturen.
+
+2.¿Por qué es una alternativa a capturar la excepción?
+    Normalmente, ante una excepción controlada, tienes dos caminos (la famosa regla del "Catch or Specify"):
+
+    Catch (Capturar): Usas try-catch. Resuelves el problema en el sitio.
+
+    Specify (Especificar con throws): No pones try-catch, pero añades throws a la firma.
 
 ## 13. Pon un ejemplo en Java de firma de método que incluya `throws`, de una función que abre un fichero pero que declara que no le interesa menejar la excepción de si el fichero no existe, sino que se propague hacia arriba. Eso sí, acuérdate del `finally`.
 
