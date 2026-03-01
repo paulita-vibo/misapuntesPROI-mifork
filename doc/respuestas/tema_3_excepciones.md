@@ -513,15 +513,39 @@ Si, pero con las exepciones controladas cambian
 
 ## 15. ¿Cuándo se recomienda usar excepciones controladas, como `IOException`, y cuándo no controladas como `IllegalArgumentException`? ¿Existen en todos los lenguajes ambas opciones? En los que sólo existe una opción, ¿cuál es la más habitual?
 
-### Respuesta
+La distinción principal se basa en si el que llama al método puede hacer algo para arreglar el problema o no.
 
+Excepciones Controladas (Checked): Se usan para condiciones de las que el programa puede recuperarse razonablemente.
+
+    Ejemplo: Un archivo no encontrado o un fallo de red. No es culpa del programador que el Wi-Fi se caiga. El programa debe estar obligado a manejarlo (ej. reintentar o pedir otra ruta).
+
+Excepciones No Controladas (Unchecked / Runtime): Se usan para errores de programación.
+
+    Ejemplo: Pasar un null donde no debe haberlo (NullPointerException) o un índice fuera de rango (ArrayIndexOutOfBoundsException). Estos son errores que el programador debería haber evitado con lógica previa, no con un try-catch.
+
+2.¿Existen ambas en todos los lenguajes?
+    No, Java es prácticamente el único lenguaque implementa y defiende las excepciones controladas de forma estricta.
+    
+    C++, C#, Python, Ruby, JavaScript: Todos estos lenguajes solo tienen excepciones no controladas. Puedes lanzar cualquier excepción, pero el compilador nunca te obligará a capturarla.
+
+    Go y Rust: Estos lenguajes ni siquiera usan "excepciones" en el sentido tradicional para errores recuperables. Devuelven el error como un valor más de la función (en Rust se usa el tipo Result).
+
+3.¿Cuál es la opción más habitual?
+    La tendencia moderna en la ingeniería de software es eliminar las excepciones controladas. La opción más habitual es que solo existan las excepciones no controladas.
+
+    ¿Por qué la industria se aleja de las "Checked Exceptions"?
+    Aunque la idea de Java era buena (obligar a la robustez), en la práctica generó dos problemas:
+
+    Código sucio: Muchos programadores, por pereza, acaban poniendo bloques catch vacíos solo para que el código compile, lo que silencia errores graves.
+
+    Rigidez: Si cambias una excepción en lo profundo de una librería, tienes que actualizar las firmas de cientos de métodos hacia arriba en la cadena de llamadas.
 
 ## 16. ¿Tiene sentido lanzar excepciones dentro del `catch`? ¿Se puede relanzar la misma excepción capturada? ¿Cuándo tendría sentido hacer esto último? Pon ejemplos de ambos casos.
 
-### Respuesta
+Si, 
 
 
 ## 17. ¿En qué consiste que una excepción sea la **"causa"** de otra excepción? Pon un ejemplo en Java, donde capturemos una excepción de bajo nivel y la encapsulemos en otra personalizada de alto nivel. Cuando una excepción sale por pantalla y tiene una causa, ¿se ve?
 
-### Respuesta
+
 
