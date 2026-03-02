@@ -102,6 +102,10 @@ Cuando un programador implementa o llama a una función, utiliza excepciones con
 
 En resumen: El objetivo es crear una red de seguridad que capture fallos (como un archivo que no existe o una división por cero) antes de que el programa colapse por completo, permitiendo que la aplicación se recupere o se cierre de forma elegante.
 
+***CLASE--------------------------------------------
+Excepción-> Surge en situaciones atípicas 
+            Cuando implementamos -> Nos permite indicar más claramente el error 
+            Cuando llamamos-> Me facilita separar la lógica normal de la de reacción o manejo de la situación erronea 
 
 ## 3. Reescribe el mismo ejemplo de raiz, pero en Java, metiendo ese método en una clase `Calculadora` y llama a dicho método desde el método `main`, mostrando cómo se puede controlar desde fuera.
 
@@ -114,29 +118,28 @@ public class Calculadora {
      * @return La raíz cuadrada.
      * @throws IllegalArgumentException si el número es negativo.
      */
-    public double raiz(double n) {
-        if (n < 0) {
+    public static double raiz(double num) {
+        if (num < 0.0) {
             // "Lanzamos" el objeto excepción. La función se detiene aquí.
             throw new IllegalArgumentException("No se puede calcular la raíz de un número negativo: " + n);
         }
-        return Math.sqrt(n);
+        return Math.sqrt(num);
     }
 
     public static void main(String[] args) {
-        Calculadora calc = new Calculadora();
         double numero = -9.0;
 
         try {
             // Intentamos ejecutar el código que podría fallar
             System.out.println("Calculando...");
-            double resultado = calc.raiz(numero);
-            
+            double resultado = Calculadora.raiz(numero);
+
             // Esta línea NO se ejecutará si la línea anterior lanza una excepción
             System.out.println("El resultado es: " + resultado);
             
         } catch (IllegalArgumentException e) {
             // Capturamos el error "desde fuera" de la función
-            System.err.println("ERROR capturado en main: " + e.getMessage());
+            System.out.println("ERROR capturado en main: " + e.getMessage());
         } finally {
             // Este bloque es opcional y se ejecuta siempre, haya error o no
             System.out.println("Finalizando operación de cálculo.");
@@ -218,6 +221,9 @@ Aquí te detallo las ventajas estratégicas que ofrece frente al modelo de C:
         En lenguajes con excepciones, si no capturas un error crítico, el programa se detiene (crash).
         Aunque parezca malo, es preferible que un programa se detenga a que siga funcionando con una raíz cuadrada negativa que luego corrompa una base de datos o el sistema de navegación de un avión.
 
+***CLASE 
+El error se progaga de forma natural hasta que llega a una capa/funcion que sí sepa que hacer 
+En el main se capturan esas excepciones 
 
 
 ## 6. En orientación a objetos, ¿las excepciones suelen ser objetos? ¿Qué ventajas tiene esto en términos de encapsulación? ¿Podemos entonces crear excepciones personalizadas?
