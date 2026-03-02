@@ -437,30 +437,57 @@ No, si no ya haria solo clases mutables
 
 ## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
 
+1.Con el String y el operador +
+    Como el objeto String es inmutable, no puedes "estirarlo" ni cambiarle letras.
+    ¿Qué puedes hacer? Cambiar la "flecha" (referencia).
+    ¿Qué ocurre? Al usar +, Java crea un objeto nuevo con el resultado y tú reasignas tu variable para que apunte a ese nuevo objeto. El objeto viejo se queda "huérfano" en la memoria.
+
+2.Con el StringBuilder
+    El objeto StringBuilder es mutable.
+    ¿Qué puedes hacer? Modificar el contenido del mismo objeto sin crear otros nuevos.
+    ¿Qué ocurre? No necesitas cambiar la referencia de la variable constantemente. La "pizarra" es la misma, solo que ahora tiene más texto escrito.
+
 ***CLASE 
 La clase String es inmutable 
+
+String elTitulo=libro.getTitulo(); -> Copia de la referencia a titulo 
+elTitulo="otra cosa" -> estamos cambiando la referencia 
+
+elTitulo.serCharAt(0,"A"); -> Cambia el estado del libro,  por lo que este metodo no existe, es inmutable , no se puede modificar 
+
+Yo no voy a poder encontrar metodos en el String que me permitan cambiar el metodo del String 
+
+
+Los + de Java "hola"+"que tal" son inmutables y crearia un String hola, un String que tal y otro String para la suma de las dos . Osea 3 objetos 
+si queremos evitar esto-> hacemos un String builder-> ejemplo de un objeto mutable que se utiliza para crear String muy largas 
+elTitulo.append("mas texto"), añadimos texto y texto al String y luego hacemos .builder para mostrar todo el texto añadido
+
+
 
 
 ## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
 
 1.¿Cómo se comparan objetos de una misma clase en POO? ¿Por su contenido o por su identidad? 
+    Depende de qué quieras comparar: 
+    -Por indentidad: Compara si son el mismo objeto en memoria,es decir, si dos referencias apuntan exactamente al mismo objeto (==) 
+            Ejemplo: if (obj1==obj2)
+    -Por contenido (estado): Compara si los objetos tiene los mismos valores en sus atributos,aunque sean objetos distintos en memoria (equals())
+            Ejemplo: if (obj1.equals(obj2))-> Si esta implementada en esa clase, nos devuelve true o false (boolean)
 
-Depende de qué quieras comparar: 
--Por indentidad: Compara si son el mismo objeto en memoria,es decir, si dos referencias apuntan exactamente al mismo objeto (==)  
--Por contenido (estado): Compara si los objetos tiene los mismos valores en sus atributos,aunque sean objetos distintos en memoria (equals())
 
 2.¿Qué es el metodo equals en Java? 
-
-equals es un método de la clase object, que todas las clases heredan. Su propósito es comparar objetos lógicamente, no por referencia  
+    equals es un método de la clase object, que todas las clases heredan. Su propósito es comparar objetos lógicamente, no por referencia  
+    Tenemos que asegurarnos de que se está haciendo una comparación por contenido 
 
 3.¿Cómo se deben comparar dos cadenas en Java? 
+    Las cadenas en Javan se comparan con equals, no con ==
+    ```java 
+    if (s1.equals(s2)) { ... }
+    ```
 
-Las cadenas en Javan se comparan con equals, no con ==
 
-```java 
-if (s1.equals(s2)) { ... }
-```
-
+***CLASE 
+equals:Por defecto hace comparación por identidad (==), excepto en clases concretas donde se implmenta una comparación por contenido , p.ej en String 
 
 ## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
 
@@ -495,6 +522,11 @@ Aquí el programador no hace nada explícito, el compilador lo maneja
 ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers?
 No. Phyton, Ruby, Smalltalk no tienen primitivos y C++ tiene primitivos pero con un efoque distitno 
 Es decir, los wrappers existen porque algunso lenguajes mezclan eficiencia (primitivos) con POO (objetos)
+
+
+***CLASE 
+Los wrapper ocurren en lenguajes que tienen tipos primitivos (p.ej Java)
+Otros lenguajes no tienen tipos primitivos, como Python 
 
 
 ## 22. ¿En POO qué es un **tipo de dato enumerado**? ¿En Java, un tipo de dato enumerado es una clase? ¿Qué ventajas tienen en términos de encapsulación los enumerados en Java? 
