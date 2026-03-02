@@ -16,7 +16,7 @@ Por favor, escribe en impersonal las respuestas.
 
 ## 1. Empecemos un tema sobre control de errores en lenguajes de programación, con algo básico. En C, donde no existen las excepciones, pongamos un ejemplo de una raíz que toma número flotante positivo. Queremos controlar el error si la función recibe un número negativo. El usuario debe ser informado pero desde fuera de la función `raiz` ¿Cómo indicamos ese error?. Enumera dos opciones diferentes de diseñar, poniendo un ejemplo de código de cada una.
 
-Opción 1: Retorno de un "Valor Centinela" (NaN)
+Opción 1: Retorno de un "Valor Centinela" (NaN)  //Devuelve valor especial 
 Esta técnica consiste en devolver un valor especial que no sea un número real válido para indicar que algo salió mal. En matemáticas, la raíz de un número negativo no es un número real, por lo que devolvemos NaN (Not a Number).
 
 Ventaja: No necesitas variables adicionales en la firma de la función.
@@ -26,18 +26,18 @@ Desventaja: El usuario debe acordarse de verificar el resultado con isnan(), o e
 #include <stdio.h>
 #include <math.h>
 
-float raiz(float n) {
-    if (n < 0) {
-        return NAN; // Valor centinela definido en math.h
+float raiz(float num) {
+    if (num < 0) {
+        return -1.0; 
     }
-    return sqrt(n);
+    return sqrt(num);
 }
 
 int main() {
     float num = -5.0;
     float resultado = raiz(num);
 
-    if (isnan(resultado)) {
+    if (isnan(resultado==-1.0)) {
         printf("Error: No se puede calcular la raiz de un numero negativo.\n");
     } else {
         printf("El resultado es: %.2f\n", resultado);
@@ -47,7 +47,7 @@ int main() {
 
 ```
 
-Opción 2: Código de Estado y Puntero de Salida
+Opción 2: Código de Estado y Puntero de Salida   // Parametro adicional para almacenar un código de error 
 Este es el estándar en sistemas donde el rendimiento y la claridad son críticos. La función devuelve un int (0 para éxito, otro número para error) y el resultado real se "escribe" en una dirección de memoria proporcionada por el usuario a través de un puntero.
 
 Ventaja: Separa claramente el estado de la ejecución del valor obtenido. E
@@ -58,30 +58,29 @@ Desventaja: La sintaxis es un poco más verbosa debido al uso de punteros.
 #include <math.h>
 
 // Retorna 0 si todo ok, -1 si hay error
-int raiz_segura(float n, float *resultado) {
+int raiz_segura(float n, int *error) {
     if (n < 0) {
-        return -1; // Código de error
+        *error=1; 
+        return 0; // Código de error
     }
-    *resultado = sqrt(n);
-    return 0; // Éxito
+    *error = sqrt(n);
+    return sqrt (n); // Éxito
 }
 
 int main() {
+    int error =0; 
     float num = -10.0;
-    float res;
+    float res = raiz (num, &error);
 
-    if (raiz_segura(num, &res) != 0) {
+    if (error!=0) {
         printf("Error critico: Entrada invalida (%.2f).\n", num);
     } else {
-        printf("La raiz es: %.2f\n", res);
+        printf("La raiz es: %.2f\n", error);
     }
     return 0;
 }
 
 ```
-
-
-
 
 ## 2. Brevemente ¿Qué es una **"excepción"**? ¿Con qué objetivo las usa un programador cuando implementa funciones o cuando las llama?
 
