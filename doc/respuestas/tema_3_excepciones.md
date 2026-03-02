@@ -254,11 +254,16 @@ Cuando una función en Java lanza una excepción y esta llega a manos del progra
 
 1.El Nombre del Error (Identidad): En C, un -1 puede significar muchas cosas.En Java, el objeto tiene un nombre claro, como RaizNegativaException. Esto permite saber exactamente qué tipo de problema ocurrió sin tener que adivinar.
 
-2.El Mensaje (La Explicación): El objeto guarda una frase escrita por el programador que explica el fallo (ej: "Error: Intentaste calcular la raíz de -5"). Es como una etiqueta que te dice qué pasó exactamente en lenguaje humano.
+2.El Mensaje (La Explicación) (getMessage) : El objeto guarda una frase escrita por el programador que explica el fallo (ej: "Error: Intentaste calcular la raíz de -5"). Es como una etiqueta que te dice qué pasó exactamente en lenguaje humano.
 
 3.La "Ruta del Crimen" (Stack Trace): Esta es la parte más útil. El objeto sabe exactamente en qué archivo, en qué función y en qué línea de código saltó el error. Además, dice qué funciones llamaron a qué funciones hasta llegar ahí. 
 
 4.Datos Extra (Contexto): Al ser un objeto, puedes guardar dentro cualquier cosa que ayude. Si falló una transferencia bancaria, el objeto puede llevar dentro el número de cuenta y el monto que falló. En C, tendrías que buscar esos datos por otro lado; en Java, vienen "dentro" del error.
+
+***CLASE-----------------
+-Un mensaje (getMessage())
+-La traza de la pila (printStrackTrace)
+-Opcionalmente, la "Causa"-> es otra excepción que es la verdadera causa 
 
 
 ## 8. En Java, sobre el bloque **"try-catch"**, ¿se pueden tener más de un bloque `catch`? ¿cuántos bloques `catch` se ejecutan?
