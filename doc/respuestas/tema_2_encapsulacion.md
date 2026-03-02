@@ -524,17 +524,32 @@ No. Phyton, Ruby, Smalltalk no tienen primitivos y C++ tiene primitivos pero con
 Es decir, los wrappers existen porque algunso lenguajes mezclan eficiencia (primitivos) con POO (objetos)
 
 
-***CLASE 
+***CLASE ----------------------------------------------------------------
 Los wrapper ocurren en lenguajes que tienen tipos primitivos (p.ej Java)
 Otros lenguajes no tienen tipos primitivos, como Python 
+
+No puedo tener un tipo primitivo como objeto????Si: 
+    int <->Integer 
+    float<->Float
+    char<->Character 
+
+Ventajas
+    -Añadirle comportamiento 
+    -Poder usarlos en contextos donde se necesitan Objetos 
+        List<T>-> Para crear una lista de objetos tienes que crar una lista de Integer (asi tenemos objetos)
+
+Autoboxing/Unboxing 
+    Por detras se estan haciendo las conversiones de forma automatica, a traves del int hacer el integer o viceversa 
+        Integer i=7i //Autoboxing -> se produce-> Integer i=new Integer (7); 
+        int j=i //Unboxing -> int j= i.intValue() -> que me devuelve el contenido del integer 
 
 
 ## 22. ¿En POO qué es un **tipo de dato enumerado**? ¿En Java, un tipo de dato enumerado es una clase? ¿Qué ventajas tienen en términos de encapsulación los enumerados en Java? 
 
 En POO, un tipo de dato enumerado es un tipo especial que: 
--Define un conjunto finito y cerrado de valores posibles
--Cada valor representa una opción válida del dominio 
--Evita valores inválidos, mágicos o inconscientes 
+    -Define un conjunto finito y cerrado de valores posibles
+    -Cada valor representa una opción válida del dominio 
+    -Evita valores inválidos, mágicos o inconscientes 
 
 ```java 
 DíaSemana = {LUNES, MARTES, MIÉRCOLES, ...}
@@ -544,13 +559,41 @@ En vez de usar int, String o constantes sueltas, el dato enumerado modela explí
 
 En Java, un enum es una clase. 
 Ventajas: 
--Encapsulan comportamiento, no solo datos 
--Control total sobre los valores válidos 
--Evitan el uso de constantes públicas dispersas 
--Seguridad de tipos 
--Encapsulan lógica relacionada al estado 
+    -Encapsulan comportamiento, no solo datos 
+    -Control total sobre los valores válidos 
+    -Evitan el uso de constantes públicas dispersas 
+    -Seguridad de tipos 
+    -Encapsulan lógica relacionada al estado 
+
+***CLASE 
+Enumerado ese un tipo con un número determinado de valores posibles 
+En Java un enumerado es una clase, cuyas instancias son finitas, conocidas de antemano, y tienen un nombre cada una (valor del enumerado)
+
+```java 
+    public enum TipoIva{
+        GENERAL (1.21), REDUCIDO (1.1); 
+    /*
+        public double aplicar (double cnt){
+            return switch (this){
+                case GENERAL-> return cant*1.21; 
+                case REDUCIDO-> return cnt*1.1; 
+            }
+        }
+    */ 
+        private double factor; 
+        private TipoIva(double factor){          //Solo puede ser private, dentro del enum (public no lo permite)
+            this.factor=factor;                  //Al crear un constructor nos obliga a darle un valor a la referencia a la que apuntamos 
+        }
+
+         public double aplicar (double cnt){
+            return cant*this.factor; 
+            }
+        }
+
+```
 
 
 ## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado. Añade además cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
 
 ### Respuesta
+
