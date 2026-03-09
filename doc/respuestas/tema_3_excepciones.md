@@ -515,16 +515,16 @@ Si,por poder podemos, pero el compilador no va a olbligar a poner un bloque try.
 
 La distinción principal se basa en si el que llama al método puede hacer algo para arreglar el problema o no.
 
-Excepciones Controladas (Checked): Se usan para condiciones de las que el programa puede recuperarse razonablemente.
+Excepciones Controladas (IOException): Se usan para condiciones de las que el programa puede recuperarse razonablemente.
 
     Ejemplo: Un archivo no encontrado o un fallo de red. No es culpa del programador que el Wi-Fi se caiga. El programa debe estar obligado a manejarlo (ej. reintentar o pedir otra ruta).
 
-Excepciones No Controladas (Unchecked / Runtime): Se usan para errores de programación.
+Excepciones No Controladas (RuntimeException): Se usan para errores de programación.
 
     Ejemplo: Pasar un null donde no debe haberlo (NullPointerException) o un índice fuera de rango (ArrayIndexOutOfBoundsException). Estos son errores que el programador debería haber evitado con lógica previa, no con un try-catch.
 
 2.¿Existen ambas en todos los lenguajes?
-    No, Java es prácticamente el único lenguaque implementa y defiende las excepciones controladas de forma estricta.
+    No, Java es prácticamente el único lenguage que implementa y defiende las excepciones controladas de forma estricta.
     
     C++, C#, Python, Ruby, JavaScript: Todos estos lenguajes solo tienen excepciones no controladas. Puedes lanzar cualquier excepción, pero el compilador nunca te obligará a capturarla.
 
@@ -542,10 +542,61 @@ Excepciones No Controladas (Unchecked / Runtime): Se usan para errores de progra
 
 ## 16. ¿Tiene sentido lanzar excepciones dentro del `catch`? ¿Se puede relanzar la misma excepción capturada? ¿Cuándo tendría sentido hacer esto último? Pon ejemplos de ambos casos.
 
-Si, 
+Si, tiene sentido 
+    -Relanzar la misma excepcion ->
 
+```java 
+try{
+
+}catch (NumberFromatException e ){
+    throw e; 
+}
+
+```
+
+    -Envolver en otra excepción nueva -> 
+
+```java 
+try{                                                                //Captamos una excepcion 
+
+}catch (IOException e){
+    throw new RuntimeException ("excepcion de E/S", E);             //Lanzamos una nueva 
+}
+
+```
+    -Lanzar otra excepcion totalmente nueva -> 
+
+```java 
+try{
+
+}cath (IOException e){
+    throw new AplicacionExeption ("error"); 
+}
+```
 
 ## 17. ¿En qué consiste que una excepción sea la **"causa"** de otra excepción? Pon un ejemplo en Java, donde capturemos una excepción de bajo nivel y la encapsulemos en otra personalizada de alto nivel. Cuando una excepción sale por pantalla y tiene una causa, ¿se ve?
 
+Consiste en que yo capturo la exception y lanzo la excepcion orginal como causa primigenia 
 
+```java 
+try{                                                                //Captamos una excepcion 
 
+}catch (IOException e){
+    throw new RuntimeException ("excepcion de E/S", E);             //Lanzamos una nueva 
+}
+
+```
+
+Una excepcion como causa de la otra
+
+-Se ve cuando la excepcion se muestra por pantalla 
+    "Excepcion externa (NetfluxException)
+    .--------------
+    .--------------
+    .---------------
+    "Caused by excepcion interna (IOException)
+    .--------------
+    .--------------
+    .---------------
+
+-Se puede obtener con el método "getCause()"
