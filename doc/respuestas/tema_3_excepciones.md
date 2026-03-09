@@ -262,14 +262,14 @@ Cuando una función en Java lanza una excepción y esta llega a manos del progra
 
 ***CLASE-----------------
 -Un mensaje (getMessage())
--La traza de la pila (printStrackTrace)
+-La traza de la pila (printStrackTrace)-> vale para depurar 
 -Opcionalmente, la "Causa"-> es otra excepción que es la verdadera causa 
 
 
 ## 8. En Java, sobre el bloque **"try-catch"**, ¿se pueden tener más de un bloque `catch`? ¿cuántos bloques `catch` se ejecutan?
 
 1.¿Se pueden tener más de un bloque catch?
-    Sí. Es muy común y recomendable. Un solo bloque try  puede ir seguido de varios bloques catch diseñados para atrapar diferentes tipos de problemas.
+    Sí.  Un solo bloque try  puede ir seguido de varios bloques catch diseñados para atrapar diferentes tipos de problemas.
 
     Esto permite que el programa reaccione de forma específica según lo que haya fallado. No es lo mismo que falte un archivo a que el servidor de internet se haya caído.
 
@@ -300,15 +300,22 @@ Cuando una función en Java lanza una excepción y esta llega a manos del progra
                 System.out.println("Ocurrió un error desconocido.");
             }
 ```
-IMPORTATNE: Un bloque try puede estar escoltado por múltiples bloques catch para gestionar distintos errores de forma personalizada. Sin embargo, ante un fallo, solo se ejecutará el primer catch que sea compatible con la excepción lanzada. Por ello, es obligatorio ordenar los bloques de lo más específico a lo más general.
+IMPORTANTE: Un bloque try puede estar escoltado por múltiples bloques catch para gestionar distintos errores de forma personalizada. Sin embargo, ante un fallo, solo se ejecutará el primer catch que sea compatible con la excepción lanzada. Por ello, es obligatorio ordenar los bloques de lo más específico a lo más general.
 
+***CLASE
+Una AcessDenniedEcepction es un subtipo de IOException
+1º el mas específico -> AccesDeniedException 
+2º el menos especifico-> IOException  
 
+Si no se pone así los catch para excepciones específicas no se ejecutarán 
 
 
 ## 9. Si las excepciones producen rupturas en el código llamador, ¿cómo podemos garantizar que se ejecuta siempre finalmente un código necesario para cierre de ficheros, liberacion de recursos, antes de que continúe propagándose la excepción? Pon un ejemplo en Java con `finally`, tanto con `catch` como sin él.
 
 El Bloque finally: La Red de Seguridad
 El bloque finally es una sección de código que se garantiza que se ejecutará siempre, independientemente de si se lanzó una excepción o si el código funcionó perfectamente. Es el lugar ideal para colocar las tareas de "limpieza" o liberación de recursos (cerrar un archivo, cerrar una conexión a Internet o una base de datos).
+
+//El finally se ejecuta SIEMPRE que se ejecute en el bloque try 
 
 Reglas clave:
 Ejecución garantizada: Se ejecuta si el try termina con éxito.
@@ -365,7 +372,7 @@ try {
 ```
 
 2.¿Se ejecuta siempre, ocurra o no una excepción?
-Casi siempre. El bloque finally está diseñado para ejecutarse independientemente de si el flujo fue exitoso o si saltó al catch.
+Si. El bloque finally está diseñado para ejecutarse independientemente de si el flujo fue exitoso o si saltó al catch.
 
 Sin embargo, existen excepciones extremas donde no se ejecutaría:
     Si el hilo muere o la Máquina Virtual (JVM) se detiene abruptamente.
@@ -413,8 +420,17 @@ En este código primero se verá el mensaje "Ejecuanto finally..." en consola y 
     Si hereda de Exception a secas, el compilador se pone estricto.
 
     Ejemplos típicos:
-    -Controlada: IOException, SQLException, ClassNotFoundException.
+    -Controlada: IOException
     -No Controlada: NullPointerException, ArrayIndexOutOfBoundsException, ArithmeticException (como dividir por cero).
+
+***CLASE 
+Tipos de RuntimeException: -> NO CONTROLADAS -> tu no estas obligado a colocar a bloques try catch /thorws 
+    -IlegalArgument
+    -NullpointerException : cuando uno intenta llamar un método sobre una referencia que está apuntando a null
+    -ArrayIndexOutOfBoundsException
+
+Tipos de IOException -> CONTROLADAS ->  Si obliga a try catch/throws 
+    -AccessDeniedException 
 
 4.Ejemplos de cuando se prefiere una u otra 
     Preferimos Excepciones Controladas (Checked)
@@ -451,7 +467,7 @@ TRUCO: Si el cliente del código no puede hacer nada para solucionar el problema
 
     Sintaxis: Se coloca después de los paréntesis de los argumentos y antes de la llave de apertura.
 
-    Uso principal: Se utiliza casi exclusivamente con excepciones controladas (checked), ya que el compilador exige que estas se declaren o se capturen.
+    Uso principal: Se utiliza casi exclusivamente con excepciones controladas (IOException), ya que el compilador exige que estas se declaren o se capturen.
 
 2.¿Por qué es una alternativa a capturar la excepción?
     Normalmente, ante una excepción controlada, tienes dos caminos (la famosa regla del "Catch or Specify"):
@@ -463,46 +479,20 @@ TRUCO: Si el cliente del código no puede hacer nada para solucionar el problema
 ## 13. Pon un ejemplo en Java de firma de método que incluya `throws`, de una función que abre un fichero pero que declara que no le interesa menejar la excepción de si el fichero no existe, sino que se propague hacia arriba. Eso sí, acuérdate del `finally`.
 
 ```java 
-import java.io.*;
-
-public class GestorArchivos {
-
-    // La firma indica que este método puede lanzar FileNotFoundException
-    public void abrirYLeer(String ruta) throws FileNotFoundException {
-        BufferedReader lector = null;
-
-        try {
-            // Intentamos abrir el archivo
-            File archivo = new File(ruta);
-            lector = new BufferedReader(new FileReader(archivo));
+    public String leerFichero (Path p) throws IOException{
+        try{
+            ...=Files.readAllBytes(p); 
             
-            System.out.println("Leyendo primera línea: " + lector.readLine());
-            
-        } catch (IOException e) {
-            // Aquí podríamos manejar errores de lectura, 
-            // pero FileNotFoundException sigue su camino hacia arriba 
-            // gracias al 'throws' en la firma.
-            System.err.println("Error de entrada/salida: " + e.getMessage());
-        } finally {
-            // El bloque finally se ejecuta SIEMPRE, haya error o no.
-            // Es el lugar sagrado para cerrar recursos.
-            try {
-                if (lector != null) {
-                    lector.close();
-                    System.out.println("Recurso cerrado correctamente.");
-                }
-            } catch (IOException e) {
-                System.err.println("No se pudo cerrar el lector.");
-            }
+        }finaly{
+
         }
     }
-}
 ```
 
 
 ## 14. ¿Podemos poner en `throws` excepciones no controladas, como `RuntimeException`? ¿Debería el método llamador entonces poner `try-catch` en ese caso? ¿Qué sentido tendría? 
 
-Si, pero con las exepciones controladas cambian 
+Si,por poder podemos, pero el compilador no va a olbligar a poner un bloque try..catch (no es lo habitual) 
 
 1.¿Se puede poner una RuntimeException en el throws?
     Sí. Java te permite declarar cualquier excepción en la firma del método, ya sea checked (como IOException) o unchecked (como NullPointerException o ArithmeticException). El compilador no te obliga, pero no te lo prohíbe.
