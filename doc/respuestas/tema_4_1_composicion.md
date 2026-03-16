@@ -61,29 +61,102 @@ class  OperadorFichero{
     public static String leerFichero(Path p); 
 }
 ```
-
-
-
-
 ## 6. En el ejemplo anterior de línea y punto, programa la relación entre `Linea` y `Punto` de dos formas. Una **como composición fuerte**, donde el ciclo de vida de los puntos está ligado al de Linea y otra **como composición débil**, donde no.
 
 COMPOSICIÓN FUERTE 
 
+```java 
+class Linea{
+    private Punto p1; 
+    private Punto p2; 
 
+    public Linea(double x1, double y1, double x2, double y2) {
+        this.p1=new Punto (x1,y1); 
+        this.p2=new Punto (x2,y2); 
+    }
+}
+``` 
 
 ## 7. En Java, en la composición fuerte, ¿cuando el contenedor destruye los objetos? No se observa que `Linea` destruya los `Punto` explícitamente, ¿Por qué?
 
-### Respuesta
+La vida de punto termina cuando es inaccesible y en el ejemplo ocurre cuando linea deja de serlo a su vez 
+Por tanto, cuando linea  "es basura" , también lo serán sus puntos y serán eliminados de memoria por el recolector de basura 
 
 
 ## 8. Pon un ejemplo de composicion débil entre un departamento que tiene varios profesores. Implementa dos composiciones a la vez: entre el departamento y todos sus profesores y entre el departamento y su director, que es un profesor del departamento. Siempre debe haber un director en el departamento desde el inicio. Lanza excepciones si se viola la invariante. Emplea arrays primitivos de Java, estilo `Profesor[]`, con máximo 50, pero no rompas la encapsulación, no desveles que estás empleando un array, permite añadir un `Profesor` al final de la lista, y eliminar un profesor dada su posición. Da acceso a los profesores con un método para saber cuántos hay y otro para obtener un profesor por posición. El director se puede cambiar por otro profesor del departamento. Sin embargo, ten en cuenta esta invariante de clase: el director debe formar siempre parte de la lista de profesores, es decir, ten cuidado al cambiar el director o al eliminar un profesor.
 
-### Respuesta
+
+```java 
+  //composicion debil 1 :
+  //1 Departamento como minimo 0 y como maximo muchos Profesor 
+  //1 Profesor como minomo 0 y como maximo muchos Departamentos 
+public class Departamento{
+    private Profesor[] profesores =new Profesor [50]; 
+    private int numProfesor=0; 
+}
+
+   //composicion 2: ´
+   //1 Departamento tiene como minimo 1 y como maximo 1 Profesor director *** 
+   //1 Profesor puede ser director como minimo de 0 y como maximo de muchos Departamentos
+   private Profesor director; 
+
+   public Departamento (Profesor director){
+        //0.Si director es null lanzamos IAE
+        //1.Añadimos el director al conjunto de profesores 
+        //2.Establecemos ese profesor como director 
+   }
+
+   public int getnumProfesores(){ return this.numProfesores; }
+   public  Profesor getProfesor (int pos){
+        //0.Validamos pos, y si no valida lanzar IAE
+        return this.profesores [pos]; 
+   }
+
+    public void addProfesor (Profesor p){
+        //0. Si ya no hay mas sitio, lanzar IAE o AIOBE (ArrayIndexOutOfBoundsException)
+    }
+    public void eliminarProfesor (int pos){
+        //0.Si pos no está en el rango correcto (0-numProfesores), 
+        //lanzar IAE
+        //1.Si el profesor en pos ES EL DIRECTOR, lanzar IAE 
+    }
+
+    public void cambiarDirector(Profesor nuevoDirector){
+        //0.Si nuevoDirector es null, IAE
+        //Si  nuevoDirector no lo encuentro (bucle de busqueda), lanzo IAE, diciendo que hay que meterlo en el departamento primero
+    }
+
+    public Profesor getDirector(){
+        return this.director; 
+    }
+
+```
+-Hay 2 composiciones débiles 
+-No se expone el array al exterior (imposible garantizar invariante de clase)
+-En los métodos que gestionan el departalmento se controla que no se viole la invariante de clase 
 
 
 ## 9. En Java, existen también `List`, cambia y muestra cómo sería el código anterior empleando `List` en vez de arrays primitivos. ¿Qué parte del código original te has ahorrado? Además, fíjate en el método `getProfesor(int pos)`: si en su lugar existiera un método que devolviera todos los profesores a la vez, ¿qué problema tendría devolver directamente la lista interna? ¿Cómo lo resolverías?
 
-### Respuesta
+```java 
+  //composicion debil 1 (VERSION CON LIST):
+  //1 Departamento como minimo 0 y como maximo muchos Profesor 
+  //1 Profesor como minomo 0 y como maximo muchos Departamentos 
+public class Departamento{
+    private List<Profesor> profesores =new  ArrayList<> [50]; 
+    private int numProfesor=0; 
+}
+
+   //composicion 2: ´
+   //1 Departamento tiene como minimo 1 y como maximo 1 Profesor director *** 
+   //1 Profesor puede ser director como minimo de 0 y como maximo de muchos Departamentos
+   private Profesor director; 
+
+
+```
+-No cambia la interfaz publica 
+-Es más facil implementar algunos metodos delegando en metodos List
+-Si se devuelve hay que devolver una copa para proteger la invariante de clase 
 
 
 ## 10. Al igual que ocurre con las excepciones en Java, que pueden encerrar causas (que son excepciones), de forma recursiva, suponen un tipo especial de composiciones, denominadas composiciones recursivas. Pon un ejemplo en Java de una `Persona`, que sea inmutable, y que tiene una madre, que es otra `Persona`. Haz un main con un ejemplo de uso con una familia de personas, desde el nieto hasta la abuela. Enumera algún otro ejemplo clásico de composiciones recursivas.
