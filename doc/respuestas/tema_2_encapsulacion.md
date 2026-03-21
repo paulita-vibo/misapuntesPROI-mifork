@@ -16,9 +16,14 @@ Por favor, escribe en impersonal las respuestas.
 
 ## 1. En Programación Orientada a Objetos (POO), ¿Qué buscan la **encapsulación** y **la ocultación** de información? Enumera brevemente algunas ventajas de la ocultación de información.
 
-En Programación Orientada a Objetos tanto la encapsulación como la ocultación de información buscan proteger y organizar mejor los datos y el comportamiento de los objetos, pero cada concepto pone el foco en algo distinto: 
+En POO tanto la encapsulación como la ocultación de información buscan proteger y organizar mejor los datos y el comportamiento de los objetos, pero cada concepto pone el foco en algo distinto: 
+
+                            ENCAPSULACIÓN
 La encapsulacion consiste en agrupar los datos (atributos) y los métodos que operan sobre ellos dentro de una clase, y controlar el acesso a esos datos mediante modificadores (como privare, protectec o public)
+
+                        OCULTACIÓN DE INFORMACIÓN
 La ocultación de información busca esconder los detalles internos de implementación de un objeto, mostrando solo lo necesario a través de una interfaz pública. 
+
 Alguna de sus ventajas son: 
 -Reduce el acoplamiento
 -Mejora la mantenibilidad 
@@ -31,7 +36,7 @@ Alguna de sus ventajas son:
     -Evito estados no validos de mis objetos 
     -Evito dependencias desde fuera que no quiero 
 
-    2 Partes-> He juntado estado y comportamiento en un artefacto (la clase), y ahora puedo ocultar ciertas partes del exterior 
+2 Partes-> He juntado estado y comportamiento en un artefacto (la clase), y ahora puedo ocultar ciertas partes del exterior 
 
 
 
@@ -41,7 +46,7 @@ La interfaz pública de un objeto o clase es el conjunto de métodos accesibles 
 
 La ocultación de información se apoya directamente en la interfaz pública: 
 -La interfaz pública expone solo lo necesario (public)
--Los detalles internos de implementación (atributos y métodos private) quedan ocultos 
+-Los detalles internos de implementación (atributos y métodos private) quedan ocultos -> ocultación de información (abstracción)
 -El usuario de la clase no puede acceder ni depender del estado interno, solo usar la interfaz 
 
 ***CLASE 
@@ -52,16 +57,61 @@ La ocultación de información se apoya directamente en la interfaz pública:
 
 Porque es la parte visible y estable del contrato con el resto del sistema. Todo el código que use esa clase dependerá directamente de ella 
 
-No es facil cambiar la interfaz pública ya que rompe dependencias, propaga cambios, afecta a la reutilización y compatibilidad y puede producir errores sutiles 
+No es facil cambiar la interfaz pública ya que: 
+    -Rompe dependencias-> Si otras clases usan tu clase a través de su interfaz pública, cualquier cambio puede hacer que dejen de funcionar.
+
+```java 
+    public double getSaldo(), 
+```
+Si cambiamos a: 
+
+```java 
+    public int getSaldo(); 
+```
+O eliminas el método, todo código que lo use fallará (errores de compilación).
+
+Eso es romper dependencias: otros módulos dependen de esa firma.
+
+-Propaga cambios
+    Ejemplo:
+        Cambias un método en una clase
+        10 clases distintas lo usan
+        Tienes que modificar las 10
+
+
+-Afecta a la reutilización y compatibilidad 
+     
+-Puede producir errores sutiles 
+Ejemplo:
+
+Cambias la lógica interna de un método sin cambiar su firma
+El programa sigue compilando
+Pero el comportamiento cambia inesperadamente
+
+O:
+
+Cambias una validación
+Algunos casos dejan de funcionar correctamente
+        
+->Son errores difíciles de detectar porque no rompen el código inmediatamente, pero sí la lógica.
 
 ***CLASE 
 La interfaz pública si se cambia tiene más consecuencias que cualquier cambio en la parte oculta 
 
 ## 4. ¿Qué son las **invariantes de clase** y por qué la ocultación de información nos ayuda?
 
-Las invariantes de clases son condiciones que deben cumplirse siempre para que un  objeto esté en un estado válido (sea mutable),  antes y despues de ejecutar cualquier método público de la clase. Describen las reglas internas que definen la coherencia del objeto 
+Las invariantes de clases son condiciones que deben cumplirse siempre para que un  objeto esté en un estado válido (sea mutable), antes y despues de ejecutar cualquier método público de la clase. Describen las reglas internas que definen la coherencia del objeto 
 
-La ocultación de información es clave porque impide modificaciones directas del estado interno, centraliza el control del estado, facilita la vadilación y reduce errores y estados inconscientes
+Ejemplos :
+    saldo >= 0
+    edad >= 0
+    ancho > 0 && alto > 0
+
+La ocultación de información es clave porque:
+    - Impide modificaciones directas del estado interno
+    - Centraliza el control del estado
+    - Facilita la vadilación 
+    - Reduce errores y estados inconscientes
 
 ***CLASE 
 INVARIANTES DE CLASE-> Condiciones que los objetos de esa clase cumplen o deben cumplir para ser válidos y durante toda la vida del objeto 
@@ -69,13 +119,12 @@ INVARIANTES DE CLASE-> Condiciones que los objetos de esa clase cumplen o deben 
         Persona debe tener edad>=0
         Rectángulo debe tener ancho y alto>0
 
-    ¿Es una invariante de clase decir que una variable tiene que ser un numero entero? Si, sistema de tipos ?????????????
-
+¿Es una invariante de clase decir que una variable tiene que ser un numero entero? NO,es el sistema de tipos ->son reglas de negocio o lógica, no del lenguaje.
 
 ## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
 ```java 
     class Punto {                       //Ahora mismo tengo garantizado que una vez se crea no va cambiar el valor de sus coordenadas
-        private double x; 
+        private double x;      //x e y son privados-> ocultación de información
         private double y; 
         
         public Punto (double x, double y){ //Interfaz publica 
@@ -83,7 +132,7 @@ INVARIANTES DE CLASE-> Condiciones que los objetos de esa clase cumplen o deben 
             this.y=y; 
         }
 
-        double distanciaAOrigen(){         //Si no le pongo nada es visible pero desde clases del mismo paquete , tb seria interfaz publica pero
+        double distanciaAOrigen(){         //No es público, tiene visibilidad por defecto (Solo se puede usar desde clases del mismo paquete, nO forma parte de la interfaz pública completa)-> para que sea publico (public)
             return Math.sqrt(this.x*this.x+this.y*this.y);                                                      //solo para los de mi paquete 
         }
 
@@ -91,27 +140,43 @@ INVARIANTES DE CLASE-> Condiciones que los objetos de esa clase cumplen o deben 
 
 ``` 
 
+                    ¿Qué significa public y private?
+-> PUBLIC
+    Accesible desde cualquier clase
+    Forma parte de la interfaz pública
+    Es lo que “ven” los usuarios de la clase
+
+    Ej:
+    public double calcularDistanciaAOrigen()
+
+ -> PRIVATE
+    Solo accesible dentro de la propia clase
+    Oculta los detalles internos
+
+    Ej:
+    private double x;
 
 
 ## 6. En Java, ¿A quiénes se pueden aplicar los modificadores `public` o `private`?
 
 El uso de modificadores de acceso public y private depende del nivel de estructura. 
-public: La clase es accesible desde cualquier otra clase en cualquier paquete 
-private: No se puede aplicar a clases de nivel superior 
+Public: La clase es accesible desde cualquier otra clase en cualquier paquete 
+Private: No se puede aplicar a clases de nivel superior 
 
 ***CLASE 
 En java 
     LPublic:clases, atributos y métodos 
-    Lprivate: clases internas (nolos estamos viendo), atributos y métodos 
+    LPrivate: clases internas (clases inferiores) (no los estamos viendo), atributos y métodos 
 
 
 ## 7. En POO, la visibilidad puede ser pública o privada, pero ¿existen más tipos de visibilidad? ¿Qué ocurre en Java? ¿Y en otros lenguajes?
 
 Java es muy específico y ofrece cuatro niveles de visibilidad: 
--public
--protected
--default
--private
+-Public
+-Protected
+-Default
+-Private
+
  Aunque solo usas tres palabras clave, el cuarto nivel es el que queda cuando no escribes nada 
 
 Cada lenguaje tiene su propia "personalidad" para manejar la privacidad: 
@@ -125,12 +190,12 @@ En java
     -"packaged-private" o sin modificador, solo se ve desde el paquete 
 
 
-## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
+## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.*MIRAR*
 
 ***CLASE 
-I¿Para qn esta oculto para las mismas clases o para las instancis del objeto? 
+¿Para qn esta oculto para las mismas clases o para las instancias del objeto? 
 ```java 
-    class Punto {                       //Ahora mismo tengo garantizado que una vez se crea no va cambiar el valor de sus coordenadas
+    class Punto (){                       //Ahora mismo tengo garantizado que una vez se crea no va cambiar el valor de sus coordenadas
         private double x; 
         private double y; 
         
@@ -158,9 +223,9 @@ La a, está oculta para código de otras clases
 
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
 
-En programación orientada a objetos, los getter y los setter son métodos que sirven para acceder y modificar los atributos (variables) de un objeto de gorma controlada
-Getter-> obtiene el valor de un atributo 
-Setter-> cambia el valor de un atributo 
+En programación orientada a objetos,los getter y los setter son métodos que sirven para acceder y modificar los atributos (variables) de un objeto de gorma controlada
+    Getter-> obtiene el valor de un atributo 
+    Setter-> cambia el valor de un atributo 
 
 ***CLASE 
 "getter" y "setter" permiten dar acceso a atributos privados para obtener su valor o cambiarlo 
@@ -204,14 +269,34 @@ Setter-> cambia el valor de un atributo
 No, se refiere a que mejora la seguridad, se habla de seguridad lógica y estructural, no de ciberseguridad. Es decir, proteger el estado interno del objeto de usos incorrectos dentro del propio programa
 
 ***CLASE 
-No, esto no es ciberseguridad, es facilitar una programación con menos buggs 
+No, esto no es ciberseguridad, es facilitar una programación con menos 'bugs' 
+(Un bug es un error o fallo en un programa que hace que no funcione como debería)
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
+                        MIEMBRO DE CLASE (STATIC)
+Pertenece a la clase, no a los objetos
+Hay una sola copia compartida   
+
+```java 
+class Persona {
+    static int contador = 0; // miembro de clase
+}
+```
+                    MIEMBRO DE INSTANCIA (NO STATIC)
+Pertenece a cada objeto
+Cada instancia tiene su propia copia
+
+```java 
+class Persona {
+    private int edad; // miembro de instancia
+}
+```
+
 ***CLASE 
 Un miembro de clase no está asociado a ninguna instancia si no que; es compartido por todas las instancias 
-    En métodos, no hay this 
-Un miembro de instancia está asociado a cada instancia; no son compartidos 
+    En métodos, no hay this ->Static 
+Un miembro de instancia está asociado a cada instancia; no son compartidos -> No static 
 
 
 ## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
@@ -221,14 +306,57 @@ Si, tiene sentido, pero solo en casos concretos, un constructor privado impide q
 ***CLASE 
 Tiene sentido? A veces 
     -Un constructor auxiliar oculto,llamado desde otros constructores públicos 
-    -Cuando prefiero usar métodos factoría (inicializador statico)
-        -Cuando quiero controlar el nº de instancias 
+    -Cuando prefiero usar métodos factoría (inicializador statico)  *MIRAR*
+    -Cuando quiero controlar el nº de instancias 
     
 
 ## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
+ 
+Con static , lo que significa que pertenecen a la clase y no a cada objeto individual, por lo que son compartidos por todas las instancias 
 
-***CLASE 
-Con static 
+Aplicación a la clase Punto: 
+```java 
+public class Punto {
+    private int x;
+    private int y;
+
+    // Miembros de clase (static)
+    private static int maxX = Integer.MIN_VALUE;
+    private static int maxY = Integer.MIN_VALUE;
+
+    // Constructor
+    public Punto(int x, int y) {
+        this.x = x;
+        this.y = y;
+
+        // Actualizar máximos
+        if (x > maxX) {
+            maxX = x;
+        }
+        if (y > maxY) {
+            maxY = y;
+        }
+    }
+
+    // Métodos de clase (static) para consultar los máximos
+    public static int getMaxX() {
+        return maxX;
+    }
+
+    public static int getMaxY() {
+        return maxY;
+    }
+
+    // Métodos normales (no static)
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+}
+```
 
 
 ## 14. Como sería un método factoría dentro de la clase `Punto` para construir un `Punto` a partir de dos coordenadas, pero que las redondee al entero más cercano. Escribe sólo el código del método, no toda la clase ¿Has usado `static`? 
@@ -239,7 +367,7 @@ Con static
         private double x; 
         private double y; 
         
-        public Punto (double x, double y){ 
+        public Punto (double x, double y){   //en el caso  de que el contructor es private -> lo estamos ocultando 
             this.x=x; 
             this.y=y; 
         }
@@ -287,15 +415,24 @@ Con static
 
 ``` 
 
+Un método factoría es simplemente un método ( static) que se encarga de crear y devolver objetos, en lugar de usar directamente el constructor desde fuera. Sirve para controlar cómo se crean los objetos (por ejemplo, redondeando valores, validando datos, reutilizando instancias, etc.).
+En Punto hemos usado static correctamente, porque quiero crear un Punto sin necesitar un objeto previo.
 
+                    DIFERENCIA ENTRE NEW/FACTORIA 
+Con new creas el objeto directamente sin lógica adicional, mientras que con un método factoría la creación del objeto pasa por un método que puede aplicar lógica (como redondear, validar o modificar valores).
 
-## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
+->private en el constructor =
+
+“Nadie desde fuera puede usar new”
+
+Entonces:
+“La única forma de crear objetos es la que yo decida (métodos factoría)”
+
+## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase. *mirar*
 
 ***CLASE 
 ```java 
     class Punto {
-        private double x; 
-        private double y; 
 
         private double []coordenadas = new double [2]; 
         
@@ -310,7 +447,7 @@ Con static
          }
 
          public double getY(){
-            return this.coordenadas [1]; 
+            return this.coordenadas[1]; 
          }
        
        //-------------------------------- Arriba primitivas, Abajo derivadas o no primitivas (estan programadas en base a las primitivas)
@@ -328,14 +465,13 @@ Con static
         class EjercicioEncapsulacion{
         public static void main (String []args){
             Punto p =new Punto(4,5); 
-            System.out.println("Tu punto está en: "+p.)      ?????????????????????
-            System.out.println (p.distanciaAOrigen()); 
+            System.out.println("Tu punto está en: (" + p.getX() + ", " + p.getY() + ")")   
+            System.out.println ("Distancia: "p.distanciaAOrigen()); 
         }
 
     }  
     }              
 ``` 
-
 
 ## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clases? 
 
@@ -354,10 +490,17 @@ public void setEdad(int edad) {
 ```
 Si edad fuera pública, este control sería imposible de garantizar 
 
-La conveción más extendida es: atributos provados, acceso a través de métodos 
+La conveción más extendida es: atributos privados, acceso a través de métodos 
 Eso se suele resumir como: encapsulación, ocultar estado y programar contra interfaces, no contra immplementación
 
-Sí, esta totalmente relacionado con las variantes de clases. Estas son reglas que siempre deben cumplirse. Si los atributos son púublicos cualquier código externo puede romper esas invariantes y la clase deja de ser dueña de su propio estado, sin embargo, si los atributos son privados la clase controla cuándo y cómo cambia su estado y las invariantges se validan en constructores y métodos 
+Sí, esta totalmente relacionado con las variantes de clases. Estas son reglas que siempre deben cumplirse. 
+->Si los atributos son privados:
+La clase controla los cambios
+Puede asegurar que las invariantes se cumplen
+
+->Si son públicos:
+Cualquiera puede romper esas reglas
+La clase pierde el control
 
 
 ***CLASE 
@@ -365,17 +508,17 @@ Si los hago publicos:
     -Para poder garantizar la variante de clase 
     -Para poder cambiar la representacion interna 
     -Convencion es: 
-        atributos siempre privadso y emplear métodos de acceso(para poder tener un acceso controlado)  
+        atributos siempre privados y emplear métodos de acceso(para poder tener un acceso controlado) publicos -> encapsulación 
 
 ## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
 
-1.¿Que significa que una clase sea "inmutable"? 
+                1.¿Que significa que una clase sea "inmutable"? 
 
-Una clase es inmutable cuando una vez creado un objeto, su estado no puede cambiar nunca. Es decir, sus atributos no se modifican después del contructor y cualquier "cambio" produce un nuevo onjeto, no modifica el existente 
+Una clase es inmutable cuando una vez creado un objeto, su estado no puede cambiar nunca. Es decir, sus atributos no se modifican después del contructor y cualquier "cambio" produce un nuevo objeto, no modifica el existente 
 
 ```java 
 public final class Dinero {
-    private final BigDecimal importe;
+    private final BigDecimal importe;   //final= no se puede reasignar-> no hay setters (para modificar), hay que crear nuevo objeto modificado
     private final String moneda;
 
     public Dinero(BigDecimal importe, String moneda) {
@@ -393,19 +536,39 @@ Dinero d = new Dinero(100, "EUR");
 Entonces, como "cambiarias" algo?
 Creando otro objeto: 
 ```java 
-public Dinero sumar(BigDecimal cantidad) {
+//no es un metodo factoria porque d → es el objeto existente, sumar(...) → se ejecuta sobre ese objeto
+public Dinero sumar(BigDecimal cantidad) {  
     return new Dinero(this.importe.add(cantidad), this.moneda);
 }
 ```
-2.¿Qué es un método modificador? 
+                    2.¿Qué es un método modificador? 
 
 Un método modificador es cualquier método que cambia el estado interno del objeto 
+```java 
+public void setEdad(int edad) {
+    this.edad = edad;
+}
+```
 
-3.¿Un método modificador es siempre un setter? 
+
+                3.¿Un método modificador es siempre un setter? 
 
 No, un setter es solo un tipo concreto de método modificador 
+```java 
+class Contador {
+    private int valor = 0;
 
-4.¿Tiene ventajas que una clase sea inmutable? 
+    public void incrementar() {
+        this.valor++;
+    }
+}
+```
+El método incrementar():
+No recibe ni asigna un valor directamente como un setter
+Pero modifica el atributo valor
+Por tanto, es un método modificador
+
+                4.¿Tiene ventajas que una clase sea inmutable? 
 Si: 
 -Invariantes garantizadas 
 -Mucho más facil de razonar 
@@ -420,13 +583,49 @@ Si:
 3. No, pero un setter si es un metodo modificador. Pero no todos los metodos modificadores son setter
 4. Si, las clases inmutables tienen ventajas-> no pongo setters (si los pongo pierdo la inmutabilidad de mi clase)-> no hacer clases mutables comp primera opcion 
 
-
 ## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
 
 En general no, solo es recomendable incluirlos cuando tengan sentido. Tener setters siempre y como conveción suele ser una  mala señal de diseño: 
--Rompen la encapsulación 
+-Rompen la encapsulación ->mal usado, puede debilitar el control que la encapsulación pretende garantizar.
+
+Idea clave
+
+Los setters no rompen la encapsulación; lo que puede romperla es permitir modificar el estado sin control ni validación.
+
+Es decir: 
+->Setter que respeta la encapsulación: 
+ ```java 
+    public void setEdad(int edad) {
+        if (edad < 0) {
+            throw new IllegalArgumentException("Edad no válida");
+        }
+        this.edad = edad;
+    }
+```
+->Setter que no respeta la encapsulación: 
+```java 
+    public void setEdad(int edad) {
+        this.edad = edad; //Cualquier valor es válido (incluso negativo), lo que puede romper las reglas internas de la clase (invariantes).
+    }
+```
+
 -Convierten las clases en un "struct con métodos" 
+    Si una clase tiene muchos atributos públicos o setters sin lógica,
+    se comporta como una simple estructura de datos (como un struct en C),
+    donde solo guardas datos y poco más.
+
+ Problema:
+    La clase pierde “comportamiento real”
+    Solo actúa como contenedor de datos
+
 -Hacen los objetos frágiles 
+    Como cualquier parte del código puede cambiar el estado del objeto,
+    es difícil garantizar que el objeto siempre esté en un estado válido.
+    Porque si hay setters públicos, cualquier clase que tenga acceso al objeto puede llamarlos.
+
+Consecuencia:
+    Puedes romper invariantes sin darte cuenta
+    El objeto depende demasiado de cómo lo usen desde fuera
 
 Tiene sentido añadir un setter cuando el cambio es simple, no rompe invariantes y representa algo natural del dominio 
 
@@ -470,10 +669,9 @@ elTitulo.append("mas texto"), añadimos texto y texto al String y luego hacemos 
 1.¿Cómo se comparan objetos de una misma clase en POO? ¿Por su contenido o por su identidad? 
     Depende de qué quieras comparar: 
     -Por indentidad: Compara si son el mismo objeto en memoria,es decir, si dos referencias apuntan exactamente al mismo objeto (==) 
-            Ejemplo: if (obj1==obj2)
+             Ejemplo: if (obj1 == obj2)
     -Por contenido (estado): Compara si los objetos tiene los mismos valores en sus atributos,aunque sean objetos distintos en memoria (equals())
-            Ejemplo: if (obj1.equals(obj2))-> Si esta implementada en esa clase, nos devuelve true o false (boolean)
-
+        Ejemplo: if (obj1.equals(obj2))-> Si esta implementada en esa clase, nos devuelve true o false (boolean)
 
 2.¿Qué es el metodo equals en Java? 
     equals es un método de la clase object, que todas las clases heredan. Su propósito es comparar objetos lógicamente, no por referencia  
@@ -481,9 +679,9 @@ elTitulo.append("mas texto"), añadimos texto y texto al String y luego hacemos 
 
 3.¿Cómo se deben comparar dos cadenas en Java? 
     Las cadenas en Javan se comparan con equals, no con ==
-    ```java 
+```java 
     if (s1.equals(s2)) { ... }
-    ```
+```
 
 
 ***CLASE 
@@ -492,6 +690,7 @@ equals:Por defecto hace comparación por identidad (==), excepto en clases concr
 ## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
 
 Las clases wrapper son clases que envuelven en un tipo de dato primitivo para poder tratarlo como un objeto dentro de un lenguaje orientado a objetos.Permiten usar valores simples (como int, float, chat) allí donde se acepta objetos 
+En lenguajes que hacen una distinción entre tipos primitivos (almacenados en la pila/stack por eficiencia) y objetos (almacenados en el montón/heap con metadatos), las clases wrapper sirven de puente.
 
 ¿Cómo se hace? 
 Se pueden crear wrappers propios para encapsular otros tipos de datos o crear uno nuevo 
@@ -505,8 +704,12 @@ Puede serlo o no, según el lenguaje
 
 En Java existe:
 Autoboxing: primitivo → wrapper
-Unboxing: wrapper → primitivo
+Es cuando el compilador de Java detecta que necesitas un objeto, pero tú le das un primitivo. Java, de forma automática, lo "mete en la caja".-> lo que está haciendo Java realmente-> Character letra = Character.valueOf('a');
 
+Unboxing: wrapper → primitivo
+Es el proceso inverso. Cuando tienes el objeto (la caja) pero necesitas el valor puro para hacer un cálculo matemático, Java "saca el valor de la caja".
+Integer caja = 10;
+int suma = caja + 5; // Aquí ocurre el unboxing -> lo q está haciendo Java->  int suma = caja.intValue() + 5;
 ```java 
 Integer a = 5;  // autoboxing (int → Integer)
 int b = a;      // unboxing (Integer → int)
@@ -594,6 +797,57 @@ En Java un enumerado es una clase, cuyas instancias son finitas, conocidas de an
 
 
 ## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado. Añade además cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
+```java 
+public enum Mes {
+    ENERO(31, 1), FEBRERO(28, 2), MARZO(31, 3), ABRIL(30, 4),
+    MAYO(31, 5), JUNIO(30, 6), JULIO(31, 7), AGOSTO(31, 8),
+    SEPTIEMBRE(30, 9), OCTUBRE(31, 10), NOVIEMBRE(30, 11), DICIEMBRE(31, 12);
 
-### Respuesta
+    private final int dias;
+    private final int numeroMes;
+
+    // Constructor privado (los enum no pueden ser public)
+    private Mes(int dias, int numeroMes) {
+        this.dias = dias;
+        this.numeroMes = numeroMes;
+    }
+
+    // Métodos solicitados
+    public int getDias() {
+        return dias;
+    }
+
+    public int getNumeroMes() {
+        return numeroMes;
+    }
+
+    // Lógica de estaciones por hemisferio
+    public boolean esDePrimavera(boolean enHemisferioNorte) {
+        if (enHemisferioNorte) {
+            // Marzo, Abril, Mayo, Junio (Norte)
+            return numeroMes >= 3 && numeroMes <= 6;
+        } else {
+            // Septiembre, Octubre, Noviembre, Diciembre (Sur)
+            return numeroMes >= 9 && numeroMes <= 12;
+        }
+    }
+
+    public boolean esDeVerano(boolean enHemisferioNorte) {
+        if (enHemisferioNorte) {
+            return numeroMes >= 6 && numeroMes <= 9;
+        } else {
+            return (numeroMes >= 12 || numeroMes <= 3);
+        }
+    }
+
+    public boolean esDeOtoño(boolean enHemisferioNorte) {
+        return esDePrimavera(!enHemisferioNorte); // El otoño es la primavera del otro lado
+    }
+
+    public boolean esDeInvierno(boolean enHemisferioNorte) {
+        return esDeVerano(!enHemisferioNorte); // El invierno es el verano del otro lado
+    }
+}
+```
+
 

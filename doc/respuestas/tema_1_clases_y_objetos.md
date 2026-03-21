@@ -123,9 +123,9 @@ Dos objetos Coche pueden tener:
 
 Pero siguen siendo objetos distintos en memoria.
 
-📌 Normalmente se asocia con:
-la dirección de memoria
-o un identificador único interno
+Normalmente se asocia con:
+    -la dirección de memoria
+    -un identificador único interno
 
 ## 5. ¿Qué es una clase? ¿Es lo mismo que un objeto? ¿Qué es una instancia? ¿Todos los lenguajes orientados a objetos manejan el concepto de clase?
                                 Clase
