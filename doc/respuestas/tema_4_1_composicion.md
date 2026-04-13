@@ -161,8 +161,61 @@ public class Departamento{
 
 ## 10. Al igual que ocurre con las excepciones en Java, que pueden encerrar causas (que son excepciones), de forma recursiva, suponen un tipo especial de composiciones, denominadas composiciones recursivas. Pon un ejemplo en Java de una `Persona`, que sea inmutable, y que tiene una madre, que es otra `Persona`. Haz un main con un ejemplo de uso con una familia de personas, desde el nieto hasta la abuela. Enumera algún otro ejemplo clásico de composiciones recursivas.
 
-### Respuesta
+```java 
+    private Persona madre; 
+
+    public Persona (Persona madre){
+        this.madre=madre; 
+    }
+
+    public Persona (){
+        this.madre=null; 
+    }
+
+    public String void (String[]args){
+
+    }
+
+``` 
 
 ## 11. ¿Qué son las relaciones de composición "bidireccionales"? ¿Qué habría que hacer para implementar este tipo de relación en el ejemplo de `Profesor` y `Departamento`?
 
-### Respuesta
+Las relaciones de composición bidireccionales son un tipo de relación entre clases (en programación orientada a objetos) donde:
+
+Hay composición: una clase “contiene” a otra (relación fuerte todo–parte).
+Es bidireccional: ambas clases se conocen entre sí y pueden acceder una a la otra.
+🔹 ¿Qué significa esto exactamente?
+
+En una composición:
+
+El objeto “parte” no tiene sentido sin el “todo”.
+Si el “todo” se destruye, las “partes” también.
+
+En una relación bidireccional:
+
+No solo el todo conoce a las partes, sino que cada parte también conoce al todo.
+Ejemplo: Profesor y Departamento
+
+Supongamos:
+
+Un Departamento tiene varios Profesor.
+Cada Profesor pertenece a un único Departamento.
+
+Esto sería una composición bidireccional si:
+
+El Departamento gestiona la vida de los Profesor.
+Cada Profesor tiene una referencia a su Departamento.
+
+IMPORTANTE: mantener la coherencia
+En relaciones bidireccionales hay que asegurarse de que:
+Si añades un Profesor al Departamento → también se actualice su departamento.
+Si lo eliminas → se rompa la referencia en ambos lados.
+Esto se hace normalmente centralizando la gestión en una clase (en este caso, Departamento).
+
+
+***CLASE
+Tanto el departamento conoce los profesores como los profesores conocen el departamento al que pertenecen-> Relacion bidireccional 
+Si fuese unidireccional no se vería reflejado en el código, se deduce. Pero la bidireccional si se refleja, la cual exige programar cuidadosamente para mantener la consistencia 
+-> Ej: Si añado un profesor al departamento, debo actualizar la referencia al Departamento desde Profesor 
+
+Para implementarla, la relac
