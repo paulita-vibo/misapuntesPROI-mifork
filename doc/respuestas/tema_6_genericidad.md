@@ -304,17 +304,201 @@ class Colegio{
 
 ## 8. En Java, se pueden declarar parámetros de tipo también a nivel de método, no solo a nivel de clase. Pon un ejemplo con un método genérico `seleccionaUno`, que pasados dos objetos del mismo tipo, te devuelva aleatoriamente uno de ellos. Muestra la diferencia de definirlo con dos `Object`, a definirlo con dos parámetros de tipo, en terminos de (i) evitar downcasting y (ii) forzar que ambos objetos sean del mismo tipo. 
 
-### Respuesta
+🔹 Version SIN genericos (usando Object)
+```java 
+import java.util.Random;
+
+public class EjemploSinGenericos {
+
+    public static Object seleccionaUno(Object a, Object b) {
+        Random rand = new Random();
+        return rand.nextBoolean() ? a : b;
+    }
+
+    public static void main(String[] args) {
+        String s = "Hola";
+        Integer n = 42;
+
+        // Permite mezclar tipos distintos
+        Object resultado = seleccionaUno(s, n);
+
+        // Necesita downcasting
+        String texto = (String) resultado; // Puede fallar en tiempo de ejecución
+        System.out.println(texto);
+    }
+}
+```
+Problemas:
+ Necesita downcasting
+No garantiza que ambos parámetros sean del mismo tipo
+Puede lanzar ClassCastException
+
+🔹 Versión CON método genérico
+
+```java 
+import java.util.Random;
+
+public class EjemploConGenericos {
+
+    public static <T> T seleccionaUno(T a, T b) {
+        Random rand = new Random();
+        return rand.nextBoolean() ? a : b;
+    }
+
+    public static void main(String[] args) {
+        String s1 = "Hola";
+        String s2 = "Adiós";
+
+        // Solo acepta argumentos del mismo tipo
+        String resultado = seleccionaUno(s1, s2);
+
+        // No necesita casting
+        System.out.println(resultado);
+
+        // Esto NO compila (tipos distintos)
+        // seleccionaUno("Hola", 42);
+    }
+}
+```
+
+🔹 Diferencias clave
+(i) Evitar downcasting
+Con Object → necesitas cast:
+String texto = (String) resultado;
+Con genéricos → no hace falta:
+String resultado = seleccionaUno(s1, s2);
+
+(ii) Forzar mismo tipo
+Con Object → permite mezclar tipos:
+seleccionaUno("Hola", 42); // ✔ compila (pero es peligroso)
+Con <T> → obliga a que sean del mismo tipo:
+seleccionaUno("Hola", 42); //  error de compilación
+
 
 
 ## 9. ¿Se pueden establecer restricciones en los parámetros de tipo? Por ejemplo, si quiero definir un tipo genérico `<T>`, ¿puedo decir que tenga que ser, al menos, un número para poder tratarlo como tal? Pon un ejemplo en Java de un `Punto` con dos coordenadas, metodos `getX`, `getY`, y una función `calcularDistanciaA` otro `Punto`. Permite que esas coordenadas sean cualquier tipo de número. Pon dos soluciones: una simplemente creando coordenadas de tipo `Number` y otra añadiendo generics para reforzar el chequeo de tipos y saber exactamente con qué tipo de número trabaja el `Punto`. En este caso y respecto al "type erasure", ¿cuál es el tipo final tras la compilación?
+🔹 Solución 1: usando directamente Number
+```java 
+public class PuntoNumber {
 
-### Respuesta
+    private Number x;
+    private Number y;
+
+    public PuntoNumber(Number x, Number y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Number getX() {
+        return x;
+    }
+
+    public Number getY() {
+        return y;
+    }
+
+    public double calcularDistanciaA(PuntoNumber otro) {
+        double dx = this.x.doubleValue() - otro.x.doubleValue();
+        double dy = this.y.doubleValue() - otro.y.doubleValue();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public static void main(String[] args) {
+        PuntoNumber p1 = new PuntoNumber(1, 2);          // Integer
+        PuntoNumber p2 = new PuntoNumber(3.5, 4.5);      // Double
+
+        double d = p1.calcularDistanciaA(p2);
+        System.out.println(d);
+    }
+}
+
+```
+🔹 Solución 2: usando genéricos con restricción
+```java 
+public class Punto<T extends Number> {
+
+    private T x;
+    private T y;
+
+    public Punto(T x, T y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public T getX() {
+        return x;
+    }
+
+    public T getY() {
+        return y;
+    }
+
+    public double calcularDistanciaA(Punto<T> otro) {
+        double dx = this.x.doubleValue() - otro.x.doubleValue();
+        double dy = this.y.doubleValue() - otro.y.doubleValue();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public static void main(String[] args) {
+        Punto<Integer> p1 = new Punto<>(1, 2);
+        Punto<Integer> p2 = new Punto<>(3, 4);
+
+        double d = p1.calcularDistanciaA(p2);
+        System.out.println(d);
+
+        // ❌ Esto NO compila (tipos distintos)
+        // Punto<Integer> p3 = new Punto<>(1, 2);
+        // Punto<Double> p4 = new Punto<>(3.0, 4.0);
+        // p3.calcularDistanciaA(p4);
+    }
+}
+```
+
+🔹 Diferencias clave
+✔ Con Number
+Permite mezclar tipos (Integer, Double, etc.)
+Menos seguro
+Más flexible pero menos preciso
+✔ Con <T extends Number>
+Obliga a trabajar con un único tipo concreto
+Mayor seguridad en compilación
+Mejora la expresividad del código
+
 
 
 ## 10. Sobre las soluciones anteriores. Si bien ambas permiten trabajar con distintos tipos de número sin duplicar la clase `Punto`, reflexiona sobre el refuerzo del chequeo de tipos con generics. ¿Permiten ambas crear un punto con una coordenada de tipo entero y la otra coordenada de tipo real? ¿Qué tipo devuelve el `getX` con la solucion sin generics y qué tipo devuelve el que tiene la solución con generics?
 
-### Respuesta
+🔹 ¿Se pueden mezclar tipos en las coordenadas?
+
+-> Solución sin genéricos (Number):
+
+PuntoNumber p = new PuntoNumber(1, 2.5);
+Sí lo permite x puede ser Integer y y Double
+No hay control: mezcla tipos libremente
+
+-> Solución con genéricos (<T extends Number>):
+
+Punto<Integer> p = new Punto<>(1, 2);      // ✔ válido
+Punto<Double> p2 = new Punto<>(1.0, 2.5);  // ✔ válido
+Punto<?> p = new Punto<>(1, 2.5); //  no compila con <T>
+No permite mezclar tipos dentro del mismo punto
+Obliga a que ambas coordenadas sean del mismo tipo T 
+
+🔹 Tipo devuelto por getX
+Sin genéricos (Number)
+public Number getX()
+🔸 Devuelve Number
+Pierdes información concreta del tipo
+Necesitas casting si quieres algo específico:
+Integer x = (Integer) p.getX(); // riesgo en runtime
+
+
+Con genéricos (<T extends Number>)
+public T getX()
+🔸 Devuelve el tipo exacto (Integer, Double, etc.)
+No necesitas casting
+Punto<Integer> p = new Punto<>(1, 2);
+Integer x = p.getX(); // ✔ seguro
 
 
 ## 11. Hagamos un ejemplo avanzado. El siguiente código, con interfaz `Punto`, que define un método `calcularDistanciaA(Punto p)`, junto con las implementaciones `Punto2D` y `Punto3D`. Añade generics para asegurarnos que la sobreescritura del método calcular distancia a otro `Punto` siempre es sobre un `Punto` del mismo tipo, evitando `instanceof` y el downcasting.
@@ -356,4 +540,67 @@ public class Punto3D implements Punto {
 
 ## 13. Java permite recuperar covarianza y contravarianza en tipos genéricos de forma controlada mediante **wildcards**. ¿Qué es un wildcard (`?`)? Muestra la diferencia entre `List<? extends T>` y `List<? super T>`, indicando en qué casos se usa cada uno. Pon dos ejemplos: (i) un método que reciba una lista de números y calcule su suma, usando `? extends`; (ii) un método que reciba una lista y le añada varios números enteros, usando `? super`.
 
-### Respuesta
+🔹 ¿Qué es un wildcard (?)?
+
+Un wildcard (?) representa un tipo desconocido.
+
+Permite introducir covarianza y contravarianza controladas en genéricos.
+
+🔹 ? extends T vs ? super T
+? extends T (covariante)
+Significa: “algún subtipo de T”
+✔Se usa para leer
+No puedes añadir elementos (excepto null)
+List<? extends Number>
+? super T (contravariante)
+Significa: “algún supertipo de T”
+Se usa para escribir
+Al leer, solo obtienes Object
+List<? super Integer>
+
+🔹 Ejemplo (i): sumar números (? extends)
+```java
+import java.util.List;
+
+public class EjemploExtends {
+
+    public static double suma(List<? extends Number> lista) {
+        double total = 0;
+        for (Number n : lista) {
+            total += n.doubleValue();
+        }
+        return total;
+    }
+}
+suma(List.of(1, 2, 3));        // Integer
+suma(List.of(1.5, 2.5, 3.5));  // Double
+```
+
+🔹 Ejemplo (ii): añadir enteros (? super)
+```java 
+import java.util.List;
+
+public class EjemploSuper {
+
+    public static void agregarEnteros(List<? super Integer> lista) {
+        lista.add(1);
+        lista.add(2);
+        lista.add(3);
+    }
+}import java.util.List;
+
+public class EjemploSuper {
+
+    public static void agregarEnteros(List<? super Integer> lista) {
+        lista.add(1);
+        lista.add(2);
+        lista.add(3);
+    }
+}
+
+List<Number> lista1 = new ArrayList<>();
+List<Object> lista2 = new ArrayList<>();
+
+agregarEnteros(lista1);
+agregarEnteros(lista2);
+```
