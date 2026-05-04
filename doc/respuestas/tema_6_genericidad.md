@@ -530,12 +530,96 @@ public class Punto3D implements Punto {
 } 
 ```
 
-### Respuesta
-
 
 ## 12. Dado que `String` es subtipo de `Object`, ¿significa eso que `List<String>` es subtipo de `List<Object>`? ¿Y que `String[]` es subtipo de `Object[]`? Razona por qué la respuesta es diferente en cada caso y qué problema en tiempo de ejecución puede aparecer con los arrays. A partir de estos ejemplos, define qué significa que un tipo genérico sea **covariante**, **contravariante** o **invariante** respecto a su parámetro de tipo.
 
-### Respuesta
+No, las dos cosas no funcionan igual, y ahí está justo el punto interesante:
+
+1) List<String> vs List<Object>
+
+Aunque String es subtipo de Object, List<String> NO es subtipo de List<Object>.
+
+¿Por qué?
+Porque los genéricos en Java son invariantes. Si se permitiera esa relación, podrías hacer algo peligroso:
+```java 
+List<String> strings = new ArrayList<>();
+List<Object> objects = strings; // ← si esto fuera válido
+
+objects.add(42); // añades un Integer
+```
+Ahora strings contendría un Integer, rompiendo la seguridad de tipos.
+El compilador evita esto prohibiendo esa conversión.
+
+2) String[] vs Object[]
+
+Aquí sí: String[] SÍ es subtipo de Object[].
+```java 
+String[] strings = new String[2];
+Object[] objects = strings; // válido
+```
+Pero esto introduce un problema en tiempo de ejecución:
+```java
+objects[0] = 42; // compila, pero...
+```
+👉 Esto lanza una excepción en runtime: ArrayStoreException.
+
+¿Por qué?
+Porque los arrays en Java son covariantes, pero mantienen un control dinámico del tipo real del array. En este caso, el array realmente es de String, así que no permite guardar un Integer.
+
+
+3) ¿Por qué la diferencia?
+Genéricos (List<T>): comprobación en tiempo de compilación → más seguros → invariantes.
+Arrays (T[]): diseño antiguo de Java → covariantes → comprobación parcial en runtime → menos seguros.
+
+
+4) Definiciones clave
+
+A partir de estos ejemplos:
+
+✔️ Covariante
+
+Un tipo genérico es covariante si:
+
+Si A es subtipo de B, entonces F<A> es subtipo de F<B>.
+
+Ejemplo:
+
+Arrays en Java: String[] → Object[]
+
+Problema: puede romper la seguridad de tipos (como vimos).
+
+✔️ Contravariante
+
+Un tipo es contravariante si:
+
+Si A es subtipo de B, entonces F<B> es subtipo de F<A>.
+
+Ejemplo típico en Java:
+
+List<? super String>
+
+Permite meter String, pero no garantiza qué tipo exacto se obtiene al leer.
+
+✔️ Invariante
+
+Un tipo es invariante si:
+
+Aunque A sea subtipo de B, F<A> y F<B> no tienen relación de subtipado.
+
+Ejemplo:
+
+List<String> y List<Object> → no son compatibles
+
+***CLASE 
+String [] miarrayS= {"A", "B"}
+Object [] mirray0=miarrayS; 
+
+en el heap tengo el String [] y en el Stack miarray 
+-> Sí, es tipo covariante 
+
+list<String> no es tipo combatible con List<Object>
+List<String> miListas= ...
+List<Object> miLista0 = miListas; -> Compliador los genericos son invariantes
 
 
 ## 13. Java permite recuperar covarianza y contravarianza en tipos genéricos de forma controlada mediante **wildcards**. ¿Qué es un wildcard (`?`)? Muestra la diferencia entre `List<? extends T>` y `List<? super T>`, indicando en qué casos se usa cada uno. Pon dos ejemplos: (i) un método que reciba una lista de números y calcule su suma, usando `? extends`; (ii) un método que reciba una lista y le añada varios números enteros, usando `? super`.
@@ -547,11 +631,13 @@ Un wildcard (?) representa un tipo desconocido.
 Permite introducir covarianza y contravarianza controladas en genéricos.
 
 🔹 ? extends T vs ? super T
+
 ? extends T (covariante)
 Significa: “algún subtipo de T”
 ✔Se usa para leer
 No puedes añadir elementos (excepto null)
 List<? extends Number>
+
 ? super T (contravariante)
 Significa: “algún supertipo de T”
 Se usa para escribir
@@ -604,3 +690,13 @@ List<Object> lista2 = new ArrayList<>();
 agregarEnteros(lista1);
 agregarEnteros(lista2);
 ```
+
+***CLASE 
+<?>
+<? super Number>
+<? Extends Number>
+
+List <String> miLista 
+List <?> miLista 
+List <? super Number>
+List<? extends Number>
