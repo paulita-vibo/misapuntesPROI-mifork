@@ -401,22 +401,69 @@ public Interface Transformador <E, S> {   //no hace falta poner abstract
 
 ## 14. Vamos a ver ejemplos expresivos de funcional en Java. Estudiemos el `List.forEach`, como versión funcional del bucle `for`. Emplea el `forEach` para recorrer una lista de `Integer` y que muestre un mensaje si el entero es positivo.
 
-### Respuesta
+List<Integer> lista= ...
+ lista.forEach(i->{
+    if(i>0){
+        sout(n+"es positivo); 
+        }
+    })
 
 ## 15. Repasando el tema de genericidad, fíjate en la firma de `forEach`, ¿por qué se usa `Consumer<? super T>` y no `Consumer<T>`? Explica qué significa **PECS**, y explícalo para el caso de mejorar el ejemplo del método `transformar` la hora de definir el tipo de la función transformadora.
 
 ### Respuesta
 
-## 16. Referencias a métodos. Podemos obtener una referencia a métodos de objetos o clases. Pon un ejemplo en JavaScript y en Java, de una clase `Persona` con un método `saludar`. En el código principal, crea una `Persona` con un nombre, y obtén una referencia a su método `saludar` en una variable local. Invoca `saludar` con esa referencia a su método `saludar`.
-
-### Respuesta
+## 16. Referencias a métodos. Podemos obtener una referencia a métodos de objetos o clases. Pon un ejemplo en JavaScript y en Java, de una clase `Persona` con un método `saludar`. En el código principal, crea una `Persona` con un nombre, y obtén una referencia a su método `saludar` en una variable local. Invoca `saludar` con esa referencia a su método `saludar`. 
+//VA ENTRAR EN EL EXAMEN 
+Referencia a metodo ( : : )-> persona saludar 
 
 
 ## 17. ¿Qué tipos de referencias a método se pueden hacer en Java? Pon un ejemplo de referencia a método estático, a constructor, a método de instancia de una instancia concreta y a método de instancia sobre cualquier instancia.
 
-### Respuesta
+4 SITUACIONES: 
+->Referencia a método estático -> Clase :: metodoEstático
+->Referencia a Constructor-> Clase::new
+->Referencia a metodo de instancia
+    a: Sin instancia conocida -> Clase::metodo (Persona::getNumViajes)(Esto es un BiFuction <Perona, ciudad, Intefer>)
+    b:Con instancia conocida -> instancia::metodo (pepe::getNumViajes)(Esto es un Function<Ciudad, Integer>)
 
 
 ## 18. Otro ejemplo expresivo. Ordena una lista de `Persona`, cada persona tiene un nombre y una edad (de tipo entero). Ordena la lista de `Persona` con `Collections.sort`, pasándole como comparador una expresión lambda que compare la edad de ambas personas y si tienen la misma edad, se ordene por orden alfabético del nombre. Crea dos versiones: Una con la función de comparación hecha manualmente, y otra empleando `Comparator`.
 
-### Respuesta
+Collections.sort-> te ordena una coleccion 
+Collections.sort (personas, Comparator.comparing(Persona::getEdad)); 
+Me crea un comparator que cada vez que reciba Persona las compara por edad 
+
+Collections.sort (personas, Comparator.comparing(Persona::getEdad) thenComparing (Persona::getNombre)); 
+
+
+
+
+
+
+________________________________________________________x____________________________________________________________________________
+ASPECTOS FUNCIONALES 
+
+Funcional: Las funciones son ciudadanos de 1º clase. Pueden: 
+    -Asignadas a variables 
+    -Pasadas como parámetro 
+    -Recibidas como respuesta 
+
+Expresiones lamba     (parametros)-> {cuerpo}
+   -Anónimas 
+
+CLOUSURE 
+-Y si el lenguaje es estáticamente tipado  (En java, interfaces funcionales -> una interfaz con "solo un " metodo abstracto)
+
+interface Runable {
+    void run (); 
+}
+    Runable f=()-> Sout("hola")
+
+
+Interfaces funcionales , les puedo asignar:
+    -Una expresion lamnda
+    -Una implementacion que programe y le puse nombre ()-> new UnaImplementacionQueProgrameYlePuseNombre(); 
+
+public MiFuncion implements Fuction<Integer, String>{
+    String apply (Integer e){....}
+}
