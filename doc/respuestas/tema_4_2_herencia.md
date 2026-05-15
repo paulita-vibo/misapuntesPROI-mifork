@@ -16,6 +16,18 @@ Por favor, escribe en impersonal las respuestas.
 
 ## 1. En orientación a objetos, ¿qué es la **herencia** y su relación con "A es-un B"?. Explica las dos implicaciones principales: (1) **compatibilidad de tipos** y (2) **herencia de estado y comportamiento**. Pon un ejemplo en Java muy sencillo, donde un `Soldado` tiene un `nombre` (privado) y un método `saludar()` que muestra su nombre. Hay dos subtipos: un `Artillero`, que es capaz de disparar cohetes y un `Zapador` que pone minas, ambos heredan el atributo nombre y la capacidad de saludar. Además, y de forma específica, el artillero tiene un número de cohetes y el zapador un número de minas, accesibles mediante "getters" específicos. Respecto a la compatibilidad de tipos, aprovechémosla: crea un array de `Soldado`, mete varios de distinto tipo (son todos compatibles con `Soldado`). Recórrela y que todos te saluden.
 
+(1)-> ¿qué es la **herencia** y su relación con "A es-un B"?
+La herencia es un mecanismo fundamental de la Programación Orientada a Objetos (POO) que permite a una clase nueva (clase hija/subclase) adquirir las características (atributos y métodos) de una clase existente (clase padre/superclase).
+
+La relación "A es-un B" (por ejemplo, "Un Artillero es un Soldado") es la regla de oro para saber si debemos usar herencia. Si la frase tiene sentido lógico, la herencia es el camino correcto. Se diferencia conceptualmente de la composición ("A tiene un B"), donde una clase simplemente guarda una instancia de otra como atributo (ej. Un Soldado tiene un Rifle).
+
+(2)-> 
+**Compatibilidad de tipos**
+Significa que un objeto de la subclase puede ser tratado como si fuera del tipo de la superclase. Como un Artillero es un Soldado, puedes almacenar un Artillero en una variable de tipo Soldado. Esto permite crear código genérico (como tu método pasarRevista) que funciona con cualquier subtipo actual o futuro sin necesidad de modificarse.
+
+**Herencia de estado y comportamiento**
+La subclase no necesita volver a definir los atributos (estado) ni los métodos (comportamiento) que ya existen en la superclase. Los hereda automáticamente. Un Zapador ya sabe saludar() y tiene un nombre simplemente por heredar de Soldado, permitiendo la reutilización de código.
+
 ***CLASE 
 Composición -> "Tiene un/tiene varios" vs. Herencia-> "es un"
 1-> Compatibilidad de tipos 
@@ -28,33 +40,37 @@ Composición -> "Tiene un/tiene varios" vs. Herencia-> "es un"
     public class Soldado {
         private String nombre; 
 
-        private Soldado (String nombre){
+        public Soldado (String nombre){
             this.nombre= nombre; 
         }
 
         public void saludar(){
-            sout ("Le saluda el soldado"+nombre); 
+            sout ("Le saluda el soldado"+this.nombre); 
+        }
+        // Getter para que las subclases puedan usar el nombre si lo necesitan
+         public String getNombre() {
+             return nombre;
         }
     }
 
     public class Artillero extends Soldado {  //extablecemos la herencia
-
         public int numCohetes; 
 
-        public Artillero(int numCohetes){
+        public Artillero(String nombre,int numCohetes){
+            super(nombre); 
             this.numCohetes=numCohetes; 
         }
 
-        public int getnumCohetes(int numCohetes){
+        public int getnumCohetes(){
             return this.numCohetes; 
         }
     }
 
      public class Zapador extends Soldado {  //extablecemos la herencia
-
         public int numMinas; 
 
-        public Zapador(int numMinas){
+        public Zapador(String nombre, int numMinas){
+            super (nombre); 
             this.numMinas=numMinas; 
         }
 
@@ -85,6 +101,37 @@ Composición -> "Tiene un/tiene varios" vs. Herencia-> "es un"
 
 ## 2. Al crear los soldados concretos, ¿cuántos constructores se ejecutan y en qué orden? ¿Qué significa `super` dentro de un constructor? Si la clase base no tiene visible el constructor sin parámetros, ¿debo llamar a `super` siempre? 
 
+(1)-> ¿Cuántos constructores se ejecutan y en qué orden?
+Como bien has dicho, se ejecuta un constructor por cada clase de la jerarquía, moviéndose de arriba a abajo (desde la superclase más alta hasta la subclase concreta).
+
+Cuando creas un Artillero:
+Se inicia la llamada al constructor de Artillero.
+Este, antes de hacer nada, delega hacia arriba llamando al constructor de Soldado.
+Soldado (que implícitamente hereda de la clase cósmica Object de Java) delega en Object.
+Se ejecuta el cuerpo de Object, luego el cuerpo de Soldado y, finalmente, se ejecuta el cuerpo de Artillero.
+Regla de oro: No puedes construir un hijo sin haber construido primero los cimientos de su padre. El estado heredado debe inicializarse antes de que la subclase añada sus propias particularidades.
+
+(2)-> ¿Qué significa `super` dentro de un constructor?
+Dentro de un constructor, la palabra clave super(...) es una llamada explícita al constructor de la superclase. Funciona como una lanzadera de datos: le pasa los argumentos necesarios al padre para que este pueda inicializar sus atributos privados.
+
+En tu código tenías una pequeña coma suelta en el super(nombre, ). La sintaxis limpia y exacta es simplemente pasarle la variable:
+```java 
+public Artillero(int numCohetes, String nombre) {
+    super(nombre); // Llama al constructor de Soldado pasándole el nombre
+    this.numCohetes = numCohetes; // Luego inicializa lo propio de Artillero
+}
+```
+(3)-> Si la clase base no tiene visible el constructor sin parámetros, ¿debo llamar a `super` siempre? 
+Si no escribes super(...) manualmente, Java intenta insertar de forma automática y transparente un super() (sin parámetros) en la primera línea de tu constructor.
+
+Si la clase padre tiene un constructor sin parámetros (o no tiene ningún constructor definido): El super() invisible de Java funciona sin problemas.
+
+Si la clase padre TIENE constructores con parámetros (como nuestro Soldado(String nombre)) y NO has definido un constructor vacío: El compilador de Java no encuentra un constructor por defecto al que invocar automáticamente y lanzará un error de compilación. Te obligará a escribir super(nombre) explícitamente.
+
+Un detalle crucial sobre super
+La llamada a super(...) debe ser siempre la primera línea de código dentro del constructor de la subclase. Si intentas hacer un this.numCohetes = numCohetes; antes de super(nombre);, Java se negará a compilar. Primero el padre, luego el hijo.
+
+***CLASE
 Se ejecutan un constructor por cada clase de la jerarquia y se ejecutan de arriba a abajo. Super indica como debe invocarse el supercontrustor desde la subclase 
 SI, si tu clase base a solo tiene el constructor con algun parametro 
 
@@ -95,7 +142,7 @@ SI, si tu clase base a solo tiene el constructor con algun parametro
 
         public Artillero(int numCohetes, String nombre){
             //Nos obliga a llamar al superConstructor 
-            super(nombre, )
+            super(nombre); 
             this.numCohetes=numCohetes; 
         }
 
@@ -106,11 +153,55 @@ SI, si tu clase base a solo tiene el constructor con algun parametro
 ```
 
 ## 3. Respecto a los objetos de subclases en memoria, los atributos privados de la superclase, ¿forman parte de una instancia de la subclase en memoria? En caso afirmativo ¿implica que se puedan usar desde el código de la subclase? Explícalo con el ejemplo de `Soldado` y alguna de sus subclases.
+Esta es una de las preguntas más brillantes y que más confusión genera en la programación orientada a objetos. La respuesta corta es: Sí, forman parte del objeto en memoria, pero No, no puedes usarlos directamente desde el código de la subclase.
 
-1. ¿forman parte de una instancia de la subclase en memoria?
+Aunque parezca una contradicción, tiene todo el sentido del mundo cuando miras cómo se organiza la memoria. Vamos a destriparlo.
+
+(1)->En la memoria: ¿El atributo privado forma parte del objeto?
+Sí, absolutamente. Cuando tú creas un objeto de una subclase (por ejemplo, un Artillero), Java reserva un único bloque de memoria para esa instancia. Dentro de ese bloque está todo: tanto los atributos que hereda de la superclase (nombre) como los suyos propios (numCohetes).
+
+Si el atributo nombre no estuviera en la memoria del objeto Artillero, cuando llamaras al método saludar(), la máquina virtual de Java no sabría qué nombre imprimir. El estado existe y ocupa espacio en el objeto.
+
+(2)-> En el código: ¿Se puede usar desde la subclase?
+No, directamente no. Aquí es donde entra en juego el concepto de encapsulamiento y los modificadores de acceso (private).
+
+Que un atributo sea private significa que solo las líneas de código que estén escritas dentro de la clase Soldado tienen permiso para leerlo o modificarlo. La clase Artillero, por mucho que sea su "hija", es una clase distinta, así que el compilador le tiene prohibido el acceso directo.
+
+```java 
+public class Soldado {
+    private String nombre; // En memoria SÍ existe para todos, pero está "blindado"
+    
+    public Soldado(String nombre) {
+        this.nombre = nombre;
+    }
+}
+
+public class Artillero extends Soldado {
+    private int numCohetes;
+
+    public Artillero(String nombre, int numCohetes) {
+        super(nombre);
+        this.numCohetes = numCohetes;
+    }
+
+    public void mostrarDatos() {
+        // INTENTO 1: Acceso directo
+        // ERROR DE COMPILACIÓN: "nombre has private access in Soldado"
+        System.out.println("Me llamo: " + this.nombre); 
+        
+        // INTENTO 2: Acceso indirecto (La forma correcta)
+        // FUNCIONA: Usamos un método público que el padre nos presta para mirar dentro
+        System.out.println("Me llamo: " + getNombre()); 
+    }
+}
+```
+
+
+***CLASE
+(1)-> ¿forman parte de una instancia de la subclase en memoria?
 Sí. 
 
-2. ¿Los atributos privados de la superclase están en la subclase?
+(2)->¿Los atributos privados de la superclase están en la subclase?
 
 Sí.
 
@@ -142,7 +233,7 @@ class SoldadoRaso extends Soldado {
     }
 }
 ```
-3. ¿Se pueden usar directamente desde la subclase?
+(3)-> ¿Se pueden usar directamente desde la subclase?
 No, no se pueden acceder directamente.
 
 El modificador private significa:
@@ -160,8 +251,13 @@ class SoldadoRaso extends Soldado {
 
 
 
-
 ## 4. ¿Qué implica en términos de **extensibilidad** de código el hecho de que sean compatibles a nivel de tipos? Ilustra esto añadiendo un nuevo tipo de `Soldado` y demostrando que el código para pedir el saludo a todos los soldados no se modifica.4
+
+(1)->¿Qué implica en términos de **extensibilidad** de código el hecho de que sean compatibles a nivel de tipos?
+Cuando dos tipos son compatibles a nivel de tipos, significa que el código que trabaja con una abstracción (por ejemplo, una interfaz o tipo base) puede aceptar nuevos tipos sin modificarse. En términos de extensibilidad, esto es clave: puedes añadir comportamiento nuevo sin tocar el código existente, siempre que respetes el contrato del tipo.
+
+
+***CLASE 
 ¿Qué implica para la extensibilidad?
 
 Que puedes:
@@ -196,16 +292,16 @@ class Artillero extends Soldado {
     }
 }
 
-class Artillero extends Soldado {
+class FrancoTirador extends Soldado {
     private int nivel;
 
-    public Artillero(String nombre, int nivel) {
+    public FrancoTirador(String nombre, int nivel) {
         super(nombre);
         this.nivel = nivel;
     }
 
     public void saludar() {
-        System.out.println("Soy artillero " + nombre);
+        System.out.println("Soy artFrancoTirador" + nombre);
     }
 }
 
@@ -246,6 +342,54 @@ public class PruebaHerencia {
 
 ## 5. En Java, cuando trabajo con referencias y herencia. ¿Puedo tener una referencia del supertipo que apunte a objetos reales de un subtipo? ¿Puedo invocar con la referencia del supertipo a métodos públicos del subtipo? ¿En qué consiste el **"upcasting"** y el **"downcasting"**? ¿Qué es el `instanceof`? Pon un ejemplo de recorrido de un array de `Soldado`, comprobando que, si el objeto real es un `Artillero`, solicite el número de cohetes que tiene y los imprima.
 
+(1)-> ¿Puedo tener una referencia del supertipo que apunte a objetos reales de un subtipo?
+Sí
+```java 
+Soldado s = new Artillero("Juan", 3);
+```
+-s es del tipo Soldado (referencia)
+-Pero el objeto real en memoria es un Artillero
+Esto es totalmente válido.
+
+
+(2)-> ¿Puedo invocar con la referencia del supertipo a métodos públicos del subtipo? 
+👉 Depende
+
+    Solo puedes llamar a métodos definidos en el supertipo
+```java
+s.saludar(); // OK (está en Soldado)
+```
+    No puedes llamar directamente métodos específicos del subtipo
+```java
+s.getCohetes(); // ERROR si no está en Soldado
+```
+Aunque el objeto real sea Artillero, el compilador solo mira el tipo de la referencia.
+
+
+(3)->¿En qué consiste el **"upcasting"** y el **"downcasting"**? 
+
+**"upcasting"**(conversión hacia arriba)
+Es cuando conviertes un subtipo a supertipo:
+```java
+Soldado s = new Artillero("Juan", 3);
+```
+**"Downcasting"** (conversión hacia abajo)
+Es cuando conviertes un supertipo a subtipo:
+```java
+Artillero a = (Artillero) s;
+```
+
+
+(4)->¿Qué es el `instanceof`? 
+Sirve para comprobar el tipo real del objeto en tiempo de ejecución:
+```java
+if (s instanceof Artillero) {
+    // es seguro hacer downcast
+}
+```
+
+
+***CLASE
 ```java
     public static void main(String[] args){
         Soldado[] soldadosVarios = new Soldado[4];
@@ -259,18 +403,44 @@ public class PruebaHerencia {
         Soldado soldado = new Artillero ("juan", 10); //upcasting, es automatico (implicito)
 
         if (soldado instanceof Artillero){  //downcasting automatico 
-            Artillero comoArtillero= (Artillero soldado) ;//downcasting, explicitco (eso que va entre parentesis) 
+            Artillero comoArtillero= (Artillero) soldado ;//downcasting, explicitco (eso que va entre parentesis) 
             int cohetes = comoArtillero.getnumCohetes(); 
             sout ("cohetes"+cohetes); 
         }
 
+
+        if (soldado instanceof Medico) {
         Medico medico = (Medico)soldado; //downcasting, explicitco (eso que va entre parentesis) 
+    }
+        
     }
 ```
 
 
 ## 6. Respecto a la ocultación de información y herencia, ¿qué significa acceso **"protegido"** de métodos y/o atributos? ¿Cómo se implementa en Java? Pon un ejemplo de uso de en la clase `Soldado` para que su nombre sea protegido y pueda usarse en el método de poner bombas del `Zapador`.
 
+(1)-> ¿Qué significa acceso **"protegido"** de métodos y/o atributos?
+
+En Java, el modificador protected es una forma intermedia de control de acceso dentro del principio de ocultación de información (encapsulación).
+
+¿Qué significa protected?
+Un atributo o método protected es accesible desde:
+
+Sí puede acceder:
+La propia clase
+Subclases (aunque estén en otro paquete)
+Clases del mismo paquete
+
+No puede acceder:
+Clases externas que no heredan ni están en el mismo paquete
+
+(2)->¿Cómo se implementa en Java? 
+```java 
+protected tipo nombre;      //O uno u otro
+protected void metodo() { }
+```
+
+***CLASE
 ```java 
 class Soldado {
     protected String nombre; // ahora es accesible por las subclases
@@ -308,6 +478,36 @@ public class Prueba {
 
 
 ## 7. En los lenguajes orientados a objetos ¿hay una **clase base** para todos los objetos? ¿Ocurre en todos los lenguajes? ¿Qué ocurre en Java?
+
+No en todos los lenguajes, pero en muchos lenguajes orientados a objetos sí existe una clase raíz común. La idea es que todo objeto comparta un “ancestro” que define comportamientos básicos.
+
+(1)->¿hay una **clase base** para todos los objetos? 
+Depende del lenguaje
+
+En muchos lenguajes sí: 
+Ejemplos:
+JaVa
+C#
+Python
+
+En otros no necesariamente: 
+Ejemplos:
+C++ (no hay una clase raíz obligatoria)
+Lenguajes con sistemas de tipos más flexibles o estructurales
+
+(3)-> ¿Qué ocurre en Java?
+👉 En Java sí existe una clase base universal
+
+Clase raíz: java.lang.Object
+Todas las clases en Java, directa o indirectamente, heredan de:
+```java 
+java.lang.Object
+```
+Esto significa que todos los objetos comparten ciertos métodos comunes como toString(), equals(), hashCode(), etc.
+
+
+
+***CLASE
 tados a objetos existe una única clase base universal, aunque es una idea bastante común.
 
 En general:
