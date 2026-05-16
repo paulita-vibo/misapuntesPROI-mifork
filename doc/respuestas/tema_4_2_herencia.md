@@ -867,24 +867,27 @@ Esto cobra aún más sentido porque:
 
 Cuando se dice que “la herencia rompe la encapsulación”, se refiere a que una clase hija queda demasiado expuesta a los detalles internos de la clase padre, perdiendo el aislamiento que debería proporcionar la encapsulación.
 
-🔹 ¿Qué es la encapsulación?
+(*)->¿Qué es la encapsulación?
 
 La encapsulación implica que:
 
 Una clase oculta su implementación interna.
 Solo expone una interfaz pública bien definida.
 El resto del código no depende de cómo está hecha por dentro.
-🔹 ¿Qué ocurre con la herencia?
+
+Es decir:
+Otras clases deberían depender de qué hace el objeto,no de cómo lo hace internamente.
+
+(*)->Qué ocurre con la herencia?
 
 Con herencia, la clase hija:
-
 Depende de la implementación interna de la clase padre (no solo de su interfaz).
 Puede acceder a elementos protected o comportamientos internos.
 Puede verse afectada por cambios internos del padre, incluso si su interfaz pública no cambia.
 
-👉 Es decir, la clase padre deja de estar completamente “encapsulada”.
+ Es decir, la clase padre deja de estar completamente “encapsulada”.
 
-🔹 Ejemplo típico
+(*)->Ejemplo típico
 
 En Java:
 ```java 
@@ -907,7 +910,7 @@ Aquí:
 ListaControlada depende directamente de cómo Lista gestiona su estado.
 Si la implementación de Lista cambia, la clase hija puede romperse.
 
-🔹 Problema clave
+(*)->Problema clave
 La herencia crea una relación en la que:
 La clase hija no solo usa la clase padre.
 Conoce y depende de sus detalles internos.
@@ -915,17 +918,29 @@ Conoce y depende de sus detalles internos.
 Esto rompe el principio de:
 
 “una clase debería poder cambiar su implementación sin afectar a otras”.
+_____________________________________________
+El problema profundo es este:
 
-🔹 ¿Cómo lo evita la composición?
+La subclase depende del comportamiento interno implícito de la superclase.
+Incluso aunque no acceda directamente a atributos.
+
+Ejemplo clásico:
+```java 
+class Stack extends Vector {
+    ...
+}
+```
+Si Vector cambia internamente cómo gestiona elementos o sincronización, Stack puede comportarse distinto aunque la API pública de Vector siga igual.
+
+(*)->¿Cómo lo evita la composición?
+
 Con composición:
-
 Solo interactúas con la interfaz pública del objeto contenido.
 No accedes a su estado interno.
 El acoplamiento es mucho menor.
 
-✔️ Conclusión
+CONCLUSION
 Decir que “la herencia rompe la encapsulación” significa que:
-
 La implementación interna deja de estar realmente oculta.
 Las clases hijas quedan fuertemente acopladas a los detalles del padre.
 Esto hace el sistema más frágil ante cambios.
@@ -935,7 +950,7 @@ Esto hace el sistema más frágil ante cambios.
 1º
 ```java 
 class Persona {
-    protected String dni;
+    protected String dni;    //con private se preserva mejor la encapsulacion
     protected String nombre;
 
     public Persona(String dni, String nombre) {
@@ -978,6 +993,7 @@ class DatosPersonales {
     public String getDni() { return dni; }
     public String getNombre() { return nombre; }
 }
+
 class Estudiante {
     private DatosPersonales datos;
     private String carrera;
@@ -987,6 +1003,7 @@ class Estudiante {
         this.carrera = carrera;
     }
 }
+
 class Trabajador {
     private DatosPersonales datos;
     private String empresa;
@@ -997,11 +1014,39 @@ class Trabajador {
     }
 }
 ```
-👉 Aquí:
 
+Ventajas y desventajas de cada enfoque
+HERENCIA: 
+Ventajas
+-reutilización directa,
+-polimorfismo,
+-modelo más natural si realmente hay relación “es-un”.
+
+Desventajas
+-fuerte acoplamiento,
+-rompe parcialmente encapsulación,
+-jerarquías rígidas,
+-más fragilidad ante cambios.
+
+
+COMPOSICIÓN:
+Ventajas
+-menor acoplamiento,
+-mejor encapsulación,
+-mayor flexibilidad,
+-reutilización más segura.
+
+Desventajas
+-más delegación,
+-algo más de código,
+-no hay polimorfismo automático.
+
+Aquí:
 Estudiante tiene datos personales
 Trabajador tiene datos personales
-🔹 Diferencia conceptual clave
+
+()->Diferencia conceptual clave
+
 Herencia → relación “es-un”
 (Estudiante es una persona)
 
