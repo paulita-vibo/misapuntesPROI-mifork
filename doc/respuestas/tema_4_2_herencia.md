@@ -533,6 +533,7 @@ Java sí la tiene : Object
 
 
 ## 8. ¿Qué es la **"herencia múltiple"**? ¿Existe en Java herencia múltiple?
+
 La herencia múltiple es una característica de algunos lenguajes orientados a objetos que permite que una clase herede de más de una clase base al mismo tiempo. Es decir, una clase puede adquirir atributos y métodos de varias “clases padre”.
 
 Ejemplo conceptual:
@@ -549,7 +550,126 @@ No existe en Java la herencia multiple
 
 ## 9. Las excepciones en los lenguajes orientados a objetos son objetos. Por tanto, se pueden crear excepciones personalizadas. Pon un ejemplo en Java de una excepción personalizada (`UsuarioNoEncontradoException`), que sea *no controlada* y que además este compuesto con un `Usuario`, para saber qué `Usuario` dio el problema. Permite además que se pueda incluir la causa, es decir, sobrecarga el constructor para tener una versión que permita añadir la causa subyacente. 
 
-***clase 
+```java 
+// Clase de dominio
+public class Usuario {
+
+    private String id;
+    private String nombre;
+
+    public Usuario(String id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{id='" + id + "', nombre='" + nombre + "'}";
+    }
+}
+
+// Excepción personalizada NO controlada
+public class UsuarioNoEncontradoException extends RuntimeException {
+
+    private Usuario usuario;
+
+    // Constructor sin causa
+    public UsuarioNoEncontradoException(Usuario usuario) {
+        super("Usuario no encontrado: " + usuario);
+        this.usuario = usuario;
+    }
+
+    // Constructor con causa subyacente
+    public UsuarioNoEncontradoException(Usuario usuario, Throwable cause) {
+        super("Usuario no encontrado: " + usuario, cause);
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+}
+// Excepción personalizada NO controlada
+public class UsuarioNoEncontradoException extends RuntimeException {
+
+    private Usuario usuario;
+
+    // Constructor sin causa
+    public UsuarioNoEncontradoException(Usuario usuario) {
+        super("Usuario no encontrado: " + usuario);
+        this.usuario = usuario;
+    }
+
+    // Constructor con causa subyacente
+    public UsuarioNoEncontradoException(Usuario usuario, Throwable cause) {
+        super("Usuario no encontrado: " + usuario, cause);
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Usuario usuario = new Usuario("123", "Ana");
+
+        try {
+            buscarUsuario(usuario);
+        } catch (UsuarioNoEncontradoException e) {
+
+            System.out.println(e.getMessage());
+
+            // Acceso al objeto Usuario que causó la excepción
+            System.out.println("Usuario problemático: " + e.getUsuario());
+
+            // Acceso a la causa
+            if (e.getCause() != null) {
+                System.out.println("Causa original: " + e.getCause());
+            }
+        }
+    }
+
+    public static void buscarUsuario(Usuario usuario) {
+
+        try {
+            // Simulación de error interno
+            throw new IllegalArgumentException("Error en la consulta a BD");
+
+        } catch (IllegalArgumentException e) {
+
+            // Lanzamos nuestra excepción personalizada
+            throw new UsuarioNoEncontradoException(usuario, e);
+        }
+    }
+}
+
+```
+
+Aspectos importantes:
+
+Al extender RuntimeException, la excepción es no controlada (unchecked exception).
+La composición se consigue mediante el atributo:
+```java 
+private Usuario usuario;
+```
+La causa subyacente se pasa al constructor de la superclase mediante:
+```java 
+super(mensaje, cause);
+```
+
+***CLASE
 ```java 
 public class UsuarioNoEcontradoException extends RuntimeException{
     public UsuarioNoEncontradoException (String mensaje, Throwable causa, Usuario usuarioNoencontrado){
@@ -575,7 +695,7 @@ public class UsuarioNoEcontradoException extends RuntimeException{
 ## 10. Herencia vs. Composición. Se dice que no se debe emplear herencia simplemente por reutilizar código, es decir, que si quiero reutilizar código simplemente, no debo pensar en herencia como primera opción ¿por qué?
 La idea de fondo es correcta: la herencia no debería usarse solo para reutilizar código.
 
-🔹 Diferencia clave
+(*)-> Diferencia clave
 
 Herencia (is-a)
 Una clase hija es un tipo de la clase padre.
@@ -585,8 +705,7 @@ Composición (has-a)
 Una clase contiene otra para usar su funcionalidad.
 Ejemplo: Coche tiene un Motor.
 
-🔹 ¿Por qué no usar herencia solo para reutilizar código?
-
+(*)->¿Por qué no usar herencia solo para reutilizar código?
 Porque la herencia implica algo más fuerte que “copiar comportamiento”:
 
 Crea una relación conceptual rígida (jerarquía).
@@ -594,27 +713,71 @@ Acopla fuertemente las clases (cambios en la base afectan a las hijas).
 Puede romper el diseño si la relación “es-un” no es real.
 Puede violar el principio de sustitución (Liskov) si se usa mal.
 
-👉 Ejemplo problemático:
+(*)->Ejemplo problemático:
 Hacer que Empleado herede de ArchivoPDF solo para reutilizar un método de impresión. No tiene sentido conceptual.
+Cuando una subclse Hereda de otra: 
+```java 
+class Animal {
+    public void respirar() { }
+}
 
-Cuándo usar cada una
+class Coche extends Animal {
+}
+```
+Aquí el problema no es técnico, sino de diseño:
 
+Un Coche NO es un Animal.
+Se heredó únicamente para reutilizar respirar(), pero conceptualmente la relación es incorrecta.
+Esto produce varios problemas.
+->Acoplamiento fuerte 
+    La subclase depende fuertemente de la implementación de la superclase.
+
+    Si modificas la clase padre:
+```java 
+class Animal {
+    protected int edad;
+}
+```
+    puedes romper clases hijas sin querer.
+
+    La herencia crea dependencia interna entre clases.
+
+    Con composición el acoplamiento es menor:
+```java 
+class Motor {
+    public void arrancar() { }
+}
+
+class Coche {
+
+    private Motor motor;
+
+    public Coche(Motor motor) {
+        this.motor = motor;
+    }
+}
+```
+Aquí Coche usa Motor, pero no depende de su estructura interna.
+
+->Rompe el encapulamiento
+->Jerarquías rígidas 
+->La herencia propaga errores de diseño
+->La composición permite cambiar comportamiento dinámicamente
+
+
+Cuándo usar cada una??
 Usa herencia cuando:
-
 Existe una relación clara de tipo (“es-un”).
 Quieres especializar comportamiento.
 La jerarquía tiene sentido semántico.
 
 Usa composición cuando:
-
 Solo quieres reutilizar funcionalidad.
 Necesitas flexibilidad (cambiar comportamientos en tiempo de ejecución).
 No hay una relación “es-un”.
 
-🔹 En Java
-
+(*)-> En Java
 Esto es especialmente importante porque:
-
 Solo hay herencia simple de clases.
 Se fomenta el uso de interfaces + composición.
 
@@ -632,8 +795,6 @@ class Coche {
     }
 }
 ```
-
-
 
 ***CLASE 
 
@@ -656,20 +817,15 @@ Con composición, solo dependes de lo que usas, no de toda la jerarquía.
 
 2. Más flexibilidad
 La composición permite cambiar comportamientos en tiempo de ejecución:
-
-Puedes sustituir componentes.
-Puedes combinar funcionalidades de distintas formas.
+-Puedes sustituir componentes.
+-Puedes combinar funcionalidades de distintas formas.
 
 3. Evita jerarquías artificiales
 La herencia obliga a una relación “es-un”.
 Si esa relación no es totalmente cierta, el diseño se vuelve confuso y frágil.
 
 4. Reduce problemas clásicos de la herencia
-Como:
 
-El “problema del diamante”.
-Dificultad para reutilizar partes sin heredar todo.
-Violaciones del principio de sustitución (Liskov).
 
 5. Reutilización más controlada
 Con composición reutilizas exactamente lo que necesitas, no todo lo que heredas.
@@ -682,10 +838,11 @@ class Ave {
     void volar() { }
 }
 
-class Pinguino extends Ave { // ❌ Problema conceptual
+class Pinguino extends Ave { //  Problema conceptual
     // no debería volar
 }
 ```
+
 Composición (más flexible):
 ```java 
 class ComportamientoVuelo {
@@ -694,16 +851,16 @@ class ComportamientoVuelo {
 
 class Ave {
     private ComportamientoVuelo vuelo;
+    public Ave(ComportamientoVuelo comportamientoVuelo) {
+        this.comportamientoVuelo = comportamientoVuelo;
+    }
 }
 ```
-🔹 En Java
+(*)->En Java
 
 Esto cobra aún más sentido porque:
-
-Solo hay herencia simple.
-Se promueve el uso de interfaces + composición para construir sistemas más modulares.
-
-
+-Solo hay herencia simple de clases.
+-Se promueve el uso de interfaces + composición para construir sistemas más modulares.
 
 
 ## 12. Herencia vs. Composición. Se dice que la *"herencia rompe la encapsulación"*, ¿a qué se refiere esto?
