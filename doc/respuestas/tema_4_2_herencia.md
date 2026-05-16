@@ -353,13 +353,13 @@ Esto es totalmente válido.
 
 
 (2)-> ¿Puedo invocar con la referencia del supertipo a métodos públicos del subtipo? 
-👉 Depende
+Depende
 
-    Solo puedes llamar a métodos definidos en el supertipo
+Solo puedes llamar a métodos definidos en el supertipo
 ```java
 s.saludar(); // OK (está en Soldado)
 ```
-    No puedes llamar directamente métodos específicos del subtipo
+No puedes llamar directamente métodos específicos del subtipo
 ```java
 s.getCohetes(); // ERROR si no está en Soldado
 ```
@@ -368,7 +368,7 @@ Aunque el objeto real sea Artillero, el compilador solo mira el tipo de la refer
 
 (3)->¿En qué consiste el **"upcasting"** y el **"downcasting"**? 
 
-**"upcasting"**(conversión hacia arriba)
+**"Upcasting"**(conversión hacia arriba)
 Es cuando conviertes un subtipo a supertipo:
 ```java
 Soldado s = new Artillero("Juan", 3);
@@ -378,7 +378,6 @@ Es cuando conviertes un supertipo a subtipo:
 ```java
 Artillero a = (Artillero) s;
 ```
-
 
 (4)->¿Qué es el `instanceof`? 
 Sirve para comprobar el tipo real del objeto en tiempo de ejecución:
@@ -433,6 +432,7 @@ Clases del mismo paquete
 
 No puede acceder:
 Clases externas que no heredan ni están en el mismo paquete
+
 
 (2)->¿Cómo se implementa en Java? 
 ```java 
@@ -496,7 +496,7 @@ C++ (no hay una clase raíz obligatoria)
 Lenguajes con sistemas de tipos más flexibles o estructurales
 
 (3)-> ¿Qué ocurre en Java?
-👉 En Java sí existe una clase base universal
+En Java sí existe una clase base universal
 
 Clase raíz: java.lang.Object
 Todas las clases en Java, directa o indirectamente, heredan de:
@@ -724,11 +724,14 @@ class Animal {
 class Coche extends Animal {
 }
 ```
+
 Aquí el problema no es técnico, sino de diseño:
 
 Un Coche NO es un Animal.
 Se heredó únicamente para reutilizar respirar(), pero conceptualmente la relación es incorrecta.
 Esto produce varios problemas.
+
+
 ->Acoplamiento fuerte 
     La subclase depende fuertemente de la implementación de la superclase.
 
@@ -738,11 +741,11 @@ class Animal {
     protected int edad;
 }
 ```
-    puedes romper clases hijas sin querer.
+puedes romper clases hijas sin querer.
 
-    La herencia crea dependencia interna entre clases.
+La herencia crea dependencia interna entre clases.
 
-    Con composición el acoplamiento es menor:
+Con composición el acoplamiento es menor:
 ```java 
 class Motor {
     public void arrancar() { }
@@ -977,7 +980,7 @@ class Trabajador extends Persona {
         this.empresa = empresa;
     }
 }
-´´´
+```
 
 2º
 ```java 
@@ -1014,6 +1017,7 @@ class Trabajador {
     }
 }
 ```
+
 
 Ventajas y desventajas de cada enfoque
 HERENCIA: 
@@ -1052,4 +1056,3 @@ Herencia → relación “es-un”
 
 Composición → relación “tiene-un”
 (Estudiante tiene datos personales)
-
