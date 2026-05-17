@@ -53,10 +53,24 @@ s.saludar(); // Se decide en ejecución → Zapador.saludar()
 Depende del lenguaje:
 
 En Java
-✅ Es automático por defecto para métodos no estáticos
+Es automático por defecto para métodos no estáticos
 No hay que indicar nada
 Se puede usar @Override (opcional pero recomendable)
 
+C++
+La ligadura dinámica no es automática.
+Hay que usar virtual.
+Permite polimorfismo en tiempo de ejecución.
+
+Java
+La ligadura dinámica es el comportamiento por defecto en métodos de instancia.
+No hace falta indicar virtual.
+Base del polimorfismo OO en Java.
+
+Python
+Todo funciona dinámicamente.
+No hace falta declarar tipos ni virtual.
+Usa polimorfismo y además duck typing.
 
 ## 3. Pon un ejemplo sencillo en Java, de un `Soldado`, con un método `saluda`, con dos subclases: `Zapador` y `Artillero`, donde `Zapador` sobreescribe el método `saludar`, sustituyendo por completo su comportamiento. Ilustra el funcionamiento del polimorfismo creando un array de `Soldados` de dos tipos y luego recorriéndolo empleando referencias de tipo `Soldado` y llamando a `saludar`.
 
@@ -107,9 +121,14 @@ Gracias a la ligadura dinámica, se ejecuta el método correcto
 
 Sí, puedes invocar el método de la clase base al sobreescribirlo y así reutilizar su comportamiento, añadiendo o modificando solo una parte.
 
-🔹 ¿Cómo se hace en Java?
 
+🔹 ¿Cómo se hace en Java?
 Se utiliza la palabra clave super, que permite acceder a la implementación de la clase padre.
+
+Cuando una clase hija sobrescribe un método, normalmente sustituye completamente al del padre.
+
+Pero a veces quieres:
+conservar lo que hacía el padre y añadir algo extra-> Ahí es donde se usa super.
 
 ```java 
 class Soldado {
@@ -146,16 +165,13 @@ Esto permite extender en lugar de reemplazar completamente el método
 
 ## 5. Al sobreescribir un método en Java, ¿qué restricciones existen sobre los tipos de los parámetros y el tipo de retorno? ¿Qué diferencia hay entre sobreescritura (*overriding*) y sobrecarga (*overloading*)? ¿Para qué sirve la anotación `@Override` y por qué es recomendable usarla siempre?
 
-🔹 Restricciones al sobreescribir (overriding) en Java
-
-Cuando una subclase redefine un método de la clase padre:
-
-Mismo nombre y mismos parámetros
-→ La firma debe coincidir exactamente (no puedes cambiar número ni tipo de parámetros).
-Tipo de retorno compatible
-
-→ Debe ser el mismo o un subtipo (retorno covariante).
-No reducir la visibilidad
+🔹¿Qué restricciones existen sobre los tipos de los parámetros y el tipo de retorno? 
+Para que sea una sobreescritura válida:
+El método debe tener el mismo nombre
+Los parámetros deben ser exactamente iguales
+El tipo de retorno debe ser:
+igual
+o compatible (covariante)
 
 → Puedes hacer el método más accesible, pero no menos:
 protected → public ✅
@@ -167,8 +183,8 @@ No se pueden sobreescribir métodos final, static o private
 (los static se “ocultan”, no se sobreescriben realmente)
 
 
-
 🔹 Overriding vs Overloading
+
 ✔️ Sobreescritura (overriding)
 Ocurre entre clase padre e hija
 Misma firma
@@ -181,7 +197,7 @@ class A {
 
 class B extends A {
     @Override
-    void metodo() {} // overriding
+    void metodo() {} // overriding-> lo redefine 
 }
 ```
 ✔️ Sobrecarga (overloading)
@@ -190,18 +206,24 @@ Mismo nombre, distintos parámetros
 Se decide en tiempo de compilación
 
 ```java 
-class A {
-    void metodo(int x) {}
-    void metodo(String s) {} // overloading
+class Calculadora {
+
+    int sumar(int a, int b) {
+        return a + b;
+    }
+
+    double sumar(double a, double b) {
+        return a + b;
+    }
 }
 ```
-🔹 ¿Para qué sirve @Override?
 
+🔹 ¿Para qué sirve @Override?
 Es una anotación que indica que un método está sobrescribiendo uno de la superclase.
 
 🔹 ¿Por qué es recomendable usarla siempre?
-✅ El compilador verifica que realmente estás sobrescribiendo
-❌ Evita errores sutiles (por ejemplo, equivocarte en un parámetro)
+El compilador verifica que realmente estás sobrescribiendo
+Evita errores sutiles (por ejemplo, equivocarte en un parámetro)
 
 👉 Ejemplo de error sin @Override:
 ```java 
@@ -221,7 +243,6 @@ Con @Override, esto daría error de compilación.
 Sí: desde el principio ya estás usando polimorfismo en Java, aunque no siempre se explique explícitamente.
 
 🔹 ¿Por qué?
-
 Porque todas las clases heredan de Object, que define métodos como:
 
 toString()
@@ -246,11 +267,11 @@ Y luego:
 Object obj = new Persona();
 System.out.println(obj.toString());
 ```
-👉 Aunque la referencia es de tipo Object, se ejecuta el toString() de Persona.
+Aunque la referencia es de tipo Object, se ejecuta el toString() de Persona.
 Eso es polimorfismo + ligadura dinámica.
 
-🔹 ¿Y con equals()?
 
+🔹 ¿Y con equals()?
 Exactamente lo mismo:
 
 Estás redefiniendo un método de la superclase
@@ -262,8 +283,8 @@ El comportamiento depende del tipo real del objeto en ejecución
 ✔️ Sobrescribir métodos = usar polimorfismo
 ✔️ Aunque no uses jerarquías complejas
 ✔️ Aunque no declares explícitamente “polimorfismo”
-✔️ Conclusión
 
+Conclusión
 Sí:
 Cuando sobrescribes toString(), equals() u otros métodos heredados de Object, ya estás usando polimorfismo, incluso en los ejemplos más básicos de Java.
 
@@ -272,19 +293,18 @@ Cuando sobrescribes toString(), equals() u otros métodos heredados de Object, y
 🔹 ¿Qué es una clase abstracta?
 
 Una clase abstracta en Java es una clase que:
+-No se puede instanciar directamente
+-Puede contener:
+    Métodos normales (con implementación)
+    Métodos abstractos (sin implementación)
+    Sirve como plantilla base para otras clases
 
-No se puede instanciar directamente
-Puede contener:
-Métodos normales (con implementación)
-Métodos abstractos (sin implementación)
-Sirve como plantilla base para otras clases
+->Se usa cuando tiene sentido definir una idea general, pero no completa.
 
-👉 Se usa cuando tiene sentido definir una idea general, pero no completa.
 
 🔹 ¿Qué es un método abstracto?
 
 Es un método que:
-
 No tiene cuerpo (sin implementación)
 Solo define su firma
 Obliga a las subclases a implementarlo
@@ -313,7 +333,6 @@ public abstract class Soldado {
 ```
 
 👉 Aquí:
-
 La clase Soldado es abstracta
 atacar() no tiene implementación
 ✔️ Subclases concretas
@@ -368,11 +387,11 @@ public abstract void atacar();
 La palabra clave final restringe la modificación en distintos niveles.
 
 🔸 1. Métodos final
-
 Un método declarado como final:
 
- No puede ser sobrescrito (no overriding) en subclases.
+No puede ser sobrescrito (no overriding) en subclases.
 Se hereda, pero su comportamiento queda “fijo”.
+
 ```java 
 class A {
     public final void mostrar() {
@@ -387,7 +406,7 @@ class B extends A {
     */
 }
 ```
-👉 Esto bloquea el polimorfismo por sobrescritura en ese método.
+ Esto bloquea el polimorfismo por sobrescritura en ese método
 
 🔸 2. Clases final
 
@@ -403,7 +422,6 @@ class Otra extends MiClase {
 }
 ```
 🔹 Relación con el polimorfismo
-
 El polimorfismo en Java depende de la sobreescritura de métodos:
 
 Si un método es final →  no hay overriding → no hay polimorfismo en ese método
@@ -417,25 +435,25 @@ Seguridad (evitar modificaciones no deseadas)
 Control del diseño
 Optimización potencial del compilador/JVM
 Evitar jerarquías peligrosas o mal diseñadas
-🔹 Ejemplo en la API estándar de Java
 
+🔹 Ejemplo en la API estándar de Java
 Sí, hay varias clases final en la API de Java.
 
 ✔️ Ejemplo claro:
 
 String
-
 Es una clase final
  No puede ser heredada
 ```java 
 String s = "hola";
 ```
+
 🔹 ¿Por qué String es final?
 Garantiza inmutabilidad
 Evita que alguien cambie su comportamiento
 Permite optimizaciones internas (como el string pool)
 
-
+RESUMEN
 final en clases: prohibe heredar
 final en métodos: prohibe sobreescribir 
 
@@ -443,7 +461,6 @@ final en métodos: prohibe sobreescribir
 ## 9. En Java, qué son las **"interfaces"**? ¿Son como clases abstractas? ¿Una clase puede implementar más de una interfaz?
 
 🔹 ¿Qué son las interfaces en Java?
-
 Una interfaz es un tipo especial que define un contrato:
 indica qué se debe hacer, pero no cómo se hace.
 
@@ -453,7 +470,6 @@ Solo declara métodos (normalmente)
 Las clases que la implementan deben proporcionar la implementación
 
 🔹 ¿Son como clases abstractas?
-
 Se parecen, pero no son lo mismo.
 ✔️ Similitudes:
 Ambas pueden definir métodos sin implementación
@@ -483,8 +499,8 @@ public interface Volador {
 }
 ```
 
-🔹 ¿Puede una clase implementar varias interfaces?
 
+🔹 ¿Puede una clase implementar varias interfaces?
 ✔️ Sí, en Java puede implementar múltiples interfaces
 
 Esto es clave porque Java no permite herencia múltiple de clases.
@@ -543,18 +559,75 @@ public class Punto2D extends Punto {
         throw new IllegalArgumentException("El punto no es 2D");
     }
 }
+
+public class Punto3D extends Punto {
+
+    private double x, y, z;
+
+    public Punto3D(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    @Override
+    public double calcularDistanciaA(Punto otro) {
+
+        if (otro instanceof Punto3D otro3D) {
+
+            double dx = this.x - otro3D.x;
+            double dy = this.y - otro3D.y;
+            double dz = this.z - otro3D.z;
+
+            return Math.sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        throw new IllegalArgumentException("El punto no es 3D");
+    }
+}
+
+public class Linea {
+
+    private Punto inicio;
+    private Punto fin;
+
+    public Linea(Punto inicio, Punto fin) {
+        this.inicio = inicio;
+        this.fin = fin;
+    }
+
+    public double longitud() {
+        return inicio.calcularDistanciaA(fin);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Punto p1 = new Punto2D(0, 0);
+        Punto p2 = new Punto2D(3, 4);
+
+        Linea l1 = new Linea(p1, p2);
+
+        System.out.println(l1.longitud()); // 5.0
+
+
+        Punto p3 = new Punto3D(0, 0, 0);
+        Punto p4 = new Punto3D(1, 2, 2);
+
+        Linea l2 = new Linea(p3, p4);
+
+        System.out.println(l2.longitud()); // 3.0
+    }
+}
 ```
-
-
-***ACABAR 
-
 
 ## 11. ¿Qué es la **"herencia de interfaces"** en Java? ¿Existe **"herencia múltiple de interfaces"**? Pon un ejemplo de una interfaz `Fichero` que tenga un método para leer su contenido en forma de `String` y luego dicha interfaz sea extendida por otra que sea `FicheroEscribible` que permita enviar contenido e incluso eliminar el fichero.
 
 La herencia de interfaces en Java consiste en que una interfaz puede extender otra interfaz, heredando sus métodos (sin implementación, salvo default o static). Esto permite construir jerarquías más específicas a partir de comportamientos más generales.
 
 ¿Existe herencia múltiple de interfaces?
-
 Sí.
 En Java, una interfaz puede extender varias interfaces a la vez, algo que no se permite con clases.
 
@@ -588,7 +661,6 @@ public interface Editable extends Fichero, Borrable {
 }
 ```
 Editable hereda:
-
 leer() de Fichero
 eliminar() de Borrable
 y añade escribir()
