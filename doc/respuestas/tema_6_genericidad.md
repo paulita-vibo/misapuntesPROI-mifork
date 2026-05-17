@@ -587,7 +587,6 @@ Integer x = p.getX();
 ```
 
 
-
 ## 11. Hagamos un ejemplo avanzado. El siguiente código, con interfaz `Punto`, que define un método `calcularDistanciaA(Punto p)`, junto con las implementaciones `Punto2D` y `Punto3D`. Añade generics para asegurarnos que la sobreescritura del método calcular distancia a otro `Punto` siempre es sobre un `Punto` del mismo tipo, evitando `instanceof` y el downcasting.
 ```java
 public interface Punto { 
@@ -619,26 +618,30 @@ public class Punto3D implements Punto {
 
 
 ## 12. Dado que `String` es subtipo de `Object`, ¿significa eso que `List<String>` es subtipo de `List<Object>`? ¿Y que `String[]` es subtipo de `Object[]`? Razona por qué la respuesta es diferente en cada caso y qué problema en tiempo de ejecución puede aparecer con los arrays. A partir de estos ejemplos, define qué significa que un tipo genérico sea **covariante**, **contravariante** o **invariante** respecto a su parámetro de tipo.
+
+Aunque sabemos que un `String` es un subtipo de `Object`, la relación de herencia no se traslada de la misma forma a las colecciones que a los arrays primitivos.
+(1)-> ¿significa eso que `List<String>` es subtipo de `List<Object>`?
+Aunque sabemos que un `String` es un subtipo de `Object`, la relación de herencia no se traslada de la misma forma a las colecciones que a los arrays primitivos.
+
 (1)-> ¿significa eso que `List<String>` es subtipo de `List<Object>`?
 Aunque sabemos que un String es un subtipo de Object, la relación no se hereda de la misma forma en las colecciones y en los arrays.
 
-Caso A: List<String> y List<Object> ➔ Son INVARIANTES
-Respuesta: List<String> NO es subtipo de List<Object>. No hay relación entre ellas.
 
-Si Java permitiera tratarlas como subtipos, romperíamos la seguridad de tipos inmediatamente en tiempo de compilación. Mira este desastre:
-No, las dos cosas no funcionan igual, y ahí está justo el punto interesante:
-```java 
+Caso A: `List<String>` y `List<Object>` (Invariantes)
+`List<String>` NO es subtipo de `List<Object>`. No existe ninguna relación de parentesco entre ellas.
+
+Si Java permitiera tratarlas como subtipos, romperíamos la seguridad de tipos en tiempo de compilación. El compilador prohíbe directamente esta asignación para evitar el siguiente desastre:
+
+```java
 List<String> misStrings = new ArrayList<>();
-List<Object> misObjetos = misStrings; // ❌ Si Java permitiera esto...
+List<Object> misObjetos = misStrings; // ❌ ERROR DE COMPILACIÓN (Java lo impide)
 
-misObjetos.add(42); // ¡Metemos un Integer en una lista que se supone que es de Strings!
-
-String texto = misStrings.get(0); // 💥 Catástrofe: Intentarías leer un Integer como String
-```
+misObjetos.add(42); // ¡Se colaría un Integer en una lista de Strings!
+String texto = misStrings.get(0); // 💥 Catástrofe en tiempo de ejecución
 Para protegerte de esto, el compilador de Java directamente prohíbe la asignación List<Object> miLista = misStrings; dando un error de compilación.
-
-(2)->¿Y que `String[]` es subtipo de `Object[]`?
-Caso B: String[] y Object[] ➔ Son COVARIANTES
+```
+(2)-> ¿Y que `String[]` es subtipo de `Object[]`?
+Caso B: String[] y Object[] -> Son COVARIANTES
 Respuesta: String[] SÍ es subtipo de Object[]. Java sí permite esta asignación.
 
 Esto se diseñó así en los años 90 (antes de que existieran los genéricos) para poder crear métodos genéricos primitivos como Arrays.sort(Object[]). Sin embargo, esto introduce el famoso problema en tiempo de ejecución:
@@ -652,31 +655,31 @@ miArrayO[0] = 42; //  Compila perfectamente, pero...
 ```
 ¿Qué pasa al ejecutarlo? En la memoria RAM (Heap), ese array sigue sabiendo de forma interna que fue creado como un array de String. Cuando intentas meterle un Integer (42), la Máquina Virtual de Java se defiende y lanza una excepción fulminante: ArrayStoreException.
 
-***DEFINICIONES CLAVE***
+DEFINICIONES CLAVE
 A partir de los experimentos anteriores, podemos definir formalmente cómo viaja la relación de subtipos dentro de las estructuras:
 
 ()->Covariante (Sigue la misma dirección)
-Si una clase A es subtipo de B, entonces F<A> también es subtipo de F<B>. La relación de herencia se mantiene en la misma dirección.
+Si una clase A es subtipo de B, entonces `F<A>` también es subtipo de `F<B>`. La relación de herencia se mantiene en la misma dirección.
 
 El ejemplo de Java: Los arrays. Como String hereda de Object, entonces String[] hereda de Object[].
 
 Problema asociado: Traslada los errores al tiempo de ejecución (ArrayStoreException).
 
 ()->Invariante (No hay relación)
-Aunque una clase A sea subtipo de B, F<A> y F<B> no tienen absolutamente ninguna relación de parentesco. Son dos tipos completamente extraños el uno para el otro.
+Aunque una clase A sea subtipo de B,`F<A>` y `F<B>` no tienen absolutamente ninguna relación de parentesco. Son dos tipos completamente extraños el uno para el otro.
 
-El ejemplo de Java: Los genéricos puros (List<T>). List<String> y List<Object> son incompatibles entre sí.
+El ejemplo de Java: Los genéricos puros (`List<T>`). `List<String>` y `List<Object> `son incompatibles entre sí.
 
 Ventaja: Máxima seguridad en tiempo de compilación.
 
 ()->Contravariante (Va en dirección opuesta / Inversa)
-Si una clase A es subtipo de B, entonces F<B> se convierte en subtipo de F<A>. La relación de herencia se da la vuelta.
+Si una clase A es subtipo de B, entonces `F<B>` se convierte en subtipo de `F<A>`. La relación de herencia se da la vuelta.
 
 El ejemplo en Java: Se logra usando comodines con la palabra clave ? super.
 
 Código: List<? super String> acepta una lista de String, una lista de Object o una lista de CharSequence.
 
-Para qué sirve: Es el principio de "escritura segura". Sirve para métodos donde vas a guardar/escribir cosas. Si una función necesita guardar strings, le da igual que le pases una lista de objetos (List<Object>), porque dentro de una caja de objetos cabe perfectamente un string.
+Para qué sirve: Es el principio de "escritura segura". Sirve para métodos donde vas a guardar/escribir cosas. Si una función necesita guardar strings, le da igual que le pases una lista de objetos (`List<Object>`), porque dentro de una caja de objetos cabe perfectamente un string.
 
 ## 13. Java permite recuperar covarianza y contravarianza en tipos genéricos de forma controlada mediante **wildcards**. ¿Qué es un wildcard (`?`)? Muestra la diferencia entre `List<? extends T>` y `List<? super T>`, indicando en qué casos se usa cada uno. Pon dos ejemplos: (i) un método que reciba una lista de números y calcule su suma, usando `? extends`; (ii) un método que reciba una lista y le añada varios números enteros, usando `? super`.
 (1)->¿Qué es un Wildcard (?)?
@@ -760,9 +763,9 @@ List <?> miLista
 List <? super Number>
 List<? extends Number>
 
--List<?>: El comodín libre. Acepta cualquier lista de la galaxia (List<String>, List<Integer>, etc.), pero está tan ciega que solo te deja leerlos como Object y no te deja escribir nada.
+-List<?>: El comodín libre. Acepta cualquier lista de la galaxia (`List<String>`, `List<Integer>`, etc.), pero está tan ciega que solo te deja leerlos como Object y no te deja escribir nada.
 
--List<Number>: Invariante. Exclusiva y únicamente acepta objetos de tipo List<Number>.
+-`List<Number>`: Invariante. Exclusiva y únicamente acepta objetos de tipo `List<Number>`.
 
 -List<? extends Number>: Covariante. Se mueve hacia ABAJO en la jerarquía (Acepta Number, Integer, Double, Float...). Solo sirve para leer.
 
